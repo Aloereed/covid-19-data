@@ -9,7 +9,7 @@ cases_total_csv = np.genfromtxt('/home/nuke/git/covid-19/us_covid-19_cases_total
 x = np.array(cases_dates_csv)
 y = np.array((cases_total_csv) / 1000000)
 
-plt.figure(figsize=(15, 8))
+plt.figure('US Total COVID-19 Cases', figsize=(15, 8))
 plt.title("US Total COVID-19 Cases")
 plt.ylabel("Cases (in millions)")
 plt.grid(True, ls = "-.")

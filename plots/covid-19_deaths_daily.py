@@ -9,7 +9,7 @@ deaths_daily_csv = np.genfromtxt('/home/nuke/git/covid-19/us_covid-19_deaths_dai
 x = np.array(deaths_dates_csv)
 z = np.array(deaths_daily_csv)
 
-plt.figure(figsize=(15, 8))
+plt.figure('US Daily COVID-19 Deaths', figsize=(15, 8))
 plt.title("US Daily COVID-19 Deaths")
 plt.ylabel("Deaths")
 plt.grid(True, ls = "-.")
