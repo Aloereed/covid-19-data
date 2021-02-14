@@ -3,10 +3,10 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-deaths_dates_csv = np.genfromtxt('/home/nuke/git/covid-19/us_covid-19_deaths_dates.csv', dtype='datetime64')
+dates_csv = np.genfromtxt('/home/nuke/git/covid-19/us_covid-19_dates.csv', dtype='datetime64')
 deaths_daily_csv = np.genfromtxt('/home/nuke/git/covid-19/us_covid-19_deaths_daily.csv', dtype='int32')
 
-x = np.array(deaths_dates_csv)
+x = np.array(dates_csv)
 z = np.array(deaths_daily_csv)
 
 plt.figure('US Daily COVID-19 Deaths', figsize=(15, 8))
