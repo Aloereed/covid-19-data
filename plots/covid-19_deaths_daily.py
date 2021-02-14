@@ -3,8 +3,8 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-dates_csv = np.genfromtxt('/home/nuke/git/covid-19/us_covid-19_dates.csv', dtype='datetime64')
-deaths_daily_csv = np.genfromtxt('/home/nuke/git/covid-19/us_covid-19_deaths_daily.csv', dtype='int32')
+dates_csv = np.genfromtxt('/home/nuke/git/covid-19-data/us_covid-19_dates.csv', dtype='datetime64')
+deaths_daily_csv = np.genfromtxt('/home/nuke/git/covid-19-data/us_covid-19_deaths_daily.csv', dtype='int32')
 
 x = np.array(dates_csv)
 z = np.array(deaths_daily_csv)
