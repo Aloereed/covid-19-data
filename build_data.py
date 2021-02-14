@@ -17,14 +17,14 @@ cases_total = pd.read_csv('/home/nuke/git/covid-19-data/us.csv', usecols=['cases
 deaths_total = pd.read_csv('/home/nuke/git/covid-19-data/us.csv', usecols=['deaths'])
 
 # Create csv's for extracted columns
-dates.to_csv("us_covid-19_dates.csv", header=False, index=False)
-cases_total.to_csv("us_covid-19_cases_total.csv", header=False, index=False)
-deaths_total.to_csv("us_covid-19_deaths_total.csv", header=False, index=False)
+dates.to_csv("/home/nuke/git/covid-19-data/data/us_covid-19_dates.csv", header=False, index=False)
+cases_total.to_csv("/home/nuke/git/covid-19-data/data/us_covid-19_cases_total.csv", header=False, index=False)
+deaths_total.to_csv("/home/nuke/git/covid-19-data/data/us_covid-19_deaths_total.csv", header=False, index=False)
 
 # Calculate the difference of total values to determine daily delta's
 # csv files
-cases_total_csv = np.genfromtxt('/home/nuke/git/covid-19-data/us_covid-19_cases_total.csv', dtype='int32')
-deaths_total_csv = np.genfromtxt('/home/nuke/git/covid-19-data/us_covid-19_deaths_total.csv', dtype='int32')
+cases_total_csv = np.genfromtxt('/home/nuke/git/covid-19-data/data/us_covid-19_cases_total.csv', dtype='int32')
+deaths_total_csv = np.genfromtxt('/home/nuke/git/covid-19-data/data/us_covid-19_deaths_total.csv', dtype='int32')
     
 # Calculate the difference
 cases_total = np.array(cases_total_csv)
@@ -35,14 +35,14 @@ deaths_diff = np.diff(deaths_total)
 deaths_daily = np.insert(deaths_diff, 0, 0)
 
 # Create csv
-np.savetxt('us_covid-19_deaths_daily.csv', deaths_daily, fmt='%d')
-np.savetxt('us_covid-19_cases_daily.csv', cases_daily, fmt='%d')
+np.savetxt('/home/nuke/git/covid-19-data/data/us_covid-19_deaths_daily.csv', deaths_daily, fmt='%d')
+np.savetxt('/home/nuke/git/covid-19-data/data/us_covid-19_cases_daily.csv', cases_daily, fmt='%d')
 
 # Aggregate all new data to one file
 # csv files
 df = pd.read_csv('/home/nuke/git/covid-19-data/us.csv')
-cases_daily = pd.read_csv('/home/nuke/git/covid-19-data/us_covid-19_cases_daily.csv', header=None, dtype=str)
-deaths_daily = pd.read_csv('/home/nuke/git/covid-19-data/us_covid-19_deaths_daily.csv', header=None, dtype=str)
+cases_daily = pd.read_csv('/home/nuke/git/covid-19-data/data/us_covid-19_cases_daily.csv', header=None, dtype=str)
+deaths_daily = pd.read_csv('/home/nuke/git/covid-19-data/data/us_covid-19_deaths_daily.csv', header=None, dtype=str)
 
 # Create csv
 df["daily cases"] = cases_daily

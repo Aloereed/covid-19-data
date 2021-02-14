@@ -5,8 +5,8 @@ import matplotlib.pyplot as plt
 
 # Plot Total Cases
 def plot_cases_total():
-    dates_csv = np.genfromtxt('/home/nuke/git/covid-19-data/us_covid-19_dates.csv', dtype='datetime64')
-    cases_total_csv = np.genfromtxt('/home/nuke/git/covid-19-data/us_covid-19_cases_total.csv', dtype='int32')
+    dates_csv = np.genfromtxt('/home/nuke/git/covid-19-data/data/us_covid-19_dates.csv', dtype='datetime64')
+    cases_total_csv = np.genfromtxt('/home/nuke/git/covid-19-data/data/us_covid-19_cases_total.csv', dtype='int32')
 
     x = np.array(dates_csv)
     y = np.array((cases_total_csv) / 1000000)
@@ -21,8 +21,8 @@ def plot_cases_total():
 
 # Plot Total Deaths
 def plot_deaths_total():
-    dates_csv = np.genfromtxt('/home/nuke/git/covid-19-data/us_covid-19_dates.csv', dtype='datetime64')
-    deaths_total_csv = np.genfromtxt('/home/nuke/git/covid-19-data/us_covid-19_deaths_total.csv', dtype='int32')
+    dates_csv = np.genfromtxt('/home/nuke/git/covid-19-data/data/us_covid-19_dates.csv', dtype='datetime64')
+    deaths_total_csv = np.genfromtxt('/home/nuke/git/covid-19-data/data/us_covid-19_deaths_total.csv', dtype='int32')
 
     x = np.array(dates_csv)
     y = np.array((deaths_total_csv) / 1000)
@@ -37,8 +37,8 @@ def plot_deaths_total():
 
 # Plot Daily Cases
 def plot_cases_daily():
-    dates_csv = np.genfromtxt('/home/nuke/git/covid-19-data/us_covid-19_dates.csv', dtype='datetime64')
-    cases_daily_csv = np.genfromtxt('/home/nuke/git/covid-19-data/us_covid-19_cases_daily.csv', dtype='int32')
+    dates_csv = np.genfromtxt('/home/nuke/git/covid-19-data/data/us_covid-19_dates.csv', dtype='datetime64')
+    cases_daily_csv = np.genfromtxt('/home/nuke/git/covid-19-data/data/us_covid-19_cases_daily.csv', dtype='int32')
 
     x = np.array(dates_csv)
     z = np.array((cases_daily_csv) / 1000)
@@ -53,8 +53,8 @@ def plot_cases_daily():
 
 # Plot Daily Deaths
 def plot_deaths_daily():
-    dates_csv = np.genfromtxt('/home/nuke/git/covid-19-data/us_covid-19_dates.csv', dtype='datetime64')
-    deaths_daily_csv = np.genfromtxt('/home/nuke/git/covid-19-data/us_covid-19_deaths_daily.csv', dtype='int32')
+    dates_csv = np.genfromtxt('/home/nuke/git/covid-19-data/data/us_covid-19_dates.csv', dtype='datetime64')
+    deaths_daily_csv = np.genfromtxt('/home/nuke/git/covid-19-data/data/us_covid-19_deaths_daily.csv', dtype='int32')
 
     x = np.array(dates_csv)
     z = np.array(deaths_daily_csv)
