@@ -1,6 +1,6 @@
 # US COVID-19 Data
 
-## [Todays Stats](https://github.com/drebrb/covid-19-data/blob/master/data/daily_stats.md)
+## [Today's Stats](https://github.com/drebrb/covid-19-data/blob/master/data/daily_stats.md)
 
 ## Total
 
