@@ -5,6 +5,7 @@ import pandas as pd
 import io
 import numpy as np
 from plot_data import*
+from daily_stats import*
 
 # Fetch data
 url = 'https://raw.githubusercontent.com/nytimes/covid-19-data/master/us.csv'
@@ -55,3 +56,6 @@ plot_cases_total()
 plot_deaths_total()
 plot_cases_daily()
 plot_deaths_daily()
+
+# Build daily status and write to 'daily_stats.md'
+create_daily_stats()
