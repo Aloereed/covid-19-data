@@ -42,7 +42,7 @@ np.savetxt('/home/nuke/git/covid-19-data/data/us_covid-19_cases_daily.csv', case
 
 # Aggregate all new data to one file
 # csv files
-df = pd.read_csv('/home/nuke/git/covid-19-data/us.csv')
+df = pd.read_csv('/home/nuke/git/covid-19-data/us.csv', header=0, names=['date', 'total cases', 'total deaths'])
 cases_daily = pd.read_csv('/home/nuke/git/covid-19-data/data/us_covid-19_cases_daily.csv', header=None, dtype=str)
 deaths_daily = pd.read_csv('/home/nuke/git/covid-19-data/data/us_covid-19_deaths_daily.csv', header=None, dtype=str)
 
