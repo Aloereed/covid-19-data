@@ -33,12 +33,12 @@ def create_daily_stats():
     # Current Date
     today = date_today
     index_today = ['Cases', 'Deaths']
-    df_today = pd.DataFrame({str(today): [cases_today, deaths_today]}, index=index_today)
+    df_today = pd.DataFrame({str(today): [f"{cases_today:,d}", f"{deaths_today:,d}"]}, index=index_today)
     df_today.index.names = ['Date']
 
     # Averages
     index_avg = ['Cases per day', 'Deaths per day']
-    df_avg = pd.DataFrame({'avg': [int(cases_mean), int(deaths_mean)]}, index=index_avg)
+    df_avg = pd.DataFrame({'avg': [f"{int(cases_mean):,d}", f"{int(deaths_mean):,d}"]}, index=index_avg)
     df_avg.index.names = ['2020-01-21 - ' + str(today)]
 
     # Write to 'daily_stats.md'
