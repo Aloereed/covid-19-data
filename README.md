@@ -1,5 +1,9 @@
 # US COVID-19 Data
-
+## 02-14-2021 Statistics
+#### <pre> +--------------+---------------+ </pre>
+#### <pre> | Cases Today  |  Deaths Today | </pre>
+#### <pre> | 84727        |  3373         | </pre>
+#### <pre> +--------------+---------------+ </pre>
 ## Total
 
 ### Total Cases
