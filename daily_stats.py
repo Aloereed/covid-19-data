@@ -43,5 +43,5 @@ def create_daily_stats():
 
     # Write to 'daily_stats.md'
     f = open("/home/nuke/git/covid-19-data/data/daily_stats.md", "w")
-    f.write("###### Stats for Today\n" + df_today.to_markdown() + "\n\n###### Averages\n" + df_avg.to_markdown())
+    f.write("###### Reported numbers for " + str(today) + "\n" + df_today.to_markdown() + "\n\n###### Averages\n" + df_avg.to_markdown())
     f.close()
