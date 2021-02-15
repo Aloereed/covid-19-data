@@ -9,7 +9,7 @@ def create_daily_report():
     deaths_daily_csv = np.genfromtxt('/home/nuke/git/covid-19-data/data/us_covid-19_deaths_daily.csv', dtype='int32')
     dates_csv = np.genfromtxt('/home/nuke/git/covid-19-data/data/us_covid-19_dates.csv', dtype='datetime64')
 
-     # Build array for daily case count and mean to date
+    # Build array for daily case count and mean to date
     cases_array = np.array(cases_daily_csv)
     cases_length = len(cases_array)
     cases_today = cases_array[cases_length - 1]
