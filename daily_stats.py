@@ -21,6 +21,7 @@ deaths_mean = np.mean(deaths_array)
 today = datetime.datetime.today().strftime('%m-%d-%Y')
 index_today = ['Cases', 'Deaths']
 df_today = pd.DataFrame({today: [cases_today, deaths_today]}, index=index_today) 
+df_today.index.names = ['Date']
 
 index_avg = ['Cases per day', 'Deaths per day']
 df_avg = pd.DataFrame({'avg': [int(cases_mean), int(deaths_mean)]}, index=index_avg)
