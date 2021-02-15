@@ -24,14 +24,19 @@ cases_total.to_csv("/home/nuke/git/covid-19-data/data/us_covid-19_cases_total.cs
 deaths_total.to_csv("/home/nuke/git/covid-19-data/data/us_covid-19_deaths_total.csv", header=False, index=False)
 
 # Calculate the difference of total values to determine daily delta's
+
 # csv files
 cases_total_csv = np.genfromtxt('/home/nuke/git/covid-19-data/data/us_covid-19_cases_total.csv', dtype='int32')
 deaths_total_csv = np.genfromtxt('/home/nuke/git/covid-19-data/data/us_covid-19_deaths_total.csv', dtype='int32')
     
 # Calculate the difference
+
+# Cases
 cases_total = np.array(cases_total_csv)
 cases_diff = np.diff(cases_total)
-cases_daily = np.insert(cases_diff, 0, 0)
+cases_daily = np.insert(cases_diff, 0, 1)
+
+# Deaths
 deaths_total = np.array(deaths_total_csv)
 deaths_diff = np.diff(deaths_total)
 deaths_daily = np.insert(deaths_diff, 0, 0)
@@ -41,6 +46,7 @@ np.savetxt('/home/nuke/git/covid-19-data/data/us_covid-19_deaths_daily.csv', dea
 np.savetxt('/home/nuke/git/covid-19-data/data/us_covid-19_cases_daily.csv', cases_daily, fmt='%d')
 
 # Aggregate all new data to one file
+
 # csv files
 df = pd.read_csv('/home/nuke/git/covid-19-data/us.csv', header=0, names=['date', 'total cases', 'total deaths'])
 cases_daily = pd.read_csv('/home/nuke/git/covid-19-data/data/us_covid-19_cases_daily.csv', header=None, dtype=str)

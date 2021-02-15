@@ -10,6 +10,7 @@ def create_daily_stats():
     dates_csv = np.genfromtxt('/home/nuke/git/covid-19-data/data/us_covid-19_dates.csv', dtype='datetime64')
 
     # Build arrays
+
     # Daily Cases
     cases_array = np.array(cases_daily_csv)
     cases_length = len(cases_array)
@@ -28,11 +29,14 @@ def create_daily_stats():
     date_today = date_array[date_length - 1 ]
  
     # Build DataFrames
+
+    # Current Date
     today = date_today
     index_today = ['Cases', 'Deaths']
     df_today = pd.DataFrame({str(today): [cases_today, deaths_today]}, index=index_today)
     df_today.index.names = ['Date']
 
+    # Averages
     index_avg = ['Cases per day', 'Deaths per day']
     df_avg = pd.DataFrame({'avg': [int(cases_mean), int(deaths_mean)]}, index=index_avg)
     df_avg.index.names = ['2020-01-21 - ' + str(today)]
