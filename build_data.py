@@ -23,7 +23,7 @@ dates.to_csv("/home/nuke/git/covid-19-data/data/us_covid-19_dates.csv", header=F
 cases_total.to_csv("/home/nuke/git/covid-19-data/data/us_covid-19_cases_total.csv", header=False, index=False)
 deaths_total.to_csv("/home/nuke/git/covid-19-data/data/us_covid-19_deaths_total.csv", header=False, index=False)
 
-# Calculate the difference of total values to determine daily delta's
+# Calculate the difference of total values to determine daily deltas
 
 # csv files
 cases_total_csv = np.genfromtxt('/home/nuke/git/covid-19-data/data/us_covid-19_cases_total.csv', dtype='int32')
