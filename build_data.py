@@ -4,6 +4,7 @@ import requests
 import pandas as pd
 import io
 import numpy as np
+from plot_data import*
 
 # Fetch data
 url = 'https://raw.githubusercontent.com/nytimes/covid-19-data/master/us.csv'
@@ -48,3 +49,9 @@ deaths_daily = pd.read_csv('/home/nuke/git/covid-19-data/data/us_covid-19_deaths
 df["daily cases"] = cases_daily
 df["daily deaths"] = deaths_daily
 df.to_csv("us_covid-19_data.csv", index=False)
+
+# Plot all data to png files
+plot_cases_total()
+plot_deaths_total()
+plot_cases_daily()
+plot_deaths_daily()

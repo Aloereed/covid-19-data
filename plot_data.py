@@ -17,6 +17,7 @@ def plot_cases_total():
     plt.grid(True, ls = "-.")
     plt.yticks(np.arange(min(y), max(y) + 10))
     plt.plot(x, y, color = "b")
+    plt.savefig("/home/nuke/git/covid-19-data/plots/US_Total_COVID-19_Cases.png")
     plt.show()
 
 # Plot Total Deaths
@@ -33,6 +34,7 @@ def plot_deaths_total():
     plt.grid(True, ls = "-.")
     plt.yticks(np.arange(min(y), max(y) + 100, 50))
     plt.plot(x, y, color = "b")
+    plt.savefig("/home/nuke/git/covid-19-data/plots/US_Total_COVID-19_Deaths.png")
     plt.show()
 
 # Plot Daily Cases
@@ -49,6 +51,7 @@ def plot_cases_daily():
     plt.grid(True, ls = "-.")
     plt.yticks(np.arange(min(z), max(z) + 100, 50))
     plt.plot(x, z, color = "b")
+    plt.savefig("/home/nuke/git/covid-19-data/plots/US_Daily_COVID-19_Cases.png")
     plt.show()
 
 # Plot Daily Deaths
@@ -65,9 +68,5 @@ def plot_deaths_daily():
     plt.grid(True, ls = "-.")
     plt.yticks(np.arange(min(z), max(z) + 1000, 500))
     plt.plot(x, z, color = "b")
+    plt.savefig("/home/nuke/git/covid-19-data/plots/US_Daily_COVID-19_Deaths.png")
     plt.show()
-
-plot_cases_total()
-plot_deaths_total()
-plot_cases_daily()
-plot_deaths_daily()
