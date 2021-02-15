@@ -27,5 +27,5 @@ index_avg = ['Cases per day', 'Deaths per day']
 df_avg = pd.DataFrame({'avg': [int(cases_mean), int(deaths_mean)]}, index=index_avg)
 df_avg.index.names = ['2021-01-21 - ' + today]
 
-print("# Stats for Today\n" + df_today.to_markdown())
-print("\n\n# Averages\n" + df_avg.to_markdown())
+print("###### Stats for Today\n" + df_today.to_markdown())
+print("\n\n###### Averages\n" + df_avg.to_markdown())
