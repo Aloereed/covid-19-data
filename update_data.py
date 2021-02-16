@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 
-from build_data import*
-from plot_data import*
-from daily_report import*
+from build_data import *
+from plot_data import *
+from daily_report import *
 
 # Update data
 build_data()
