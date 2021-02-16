@@ -3,8 +3,8 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
+def plot_data():
 # Plot Total Cases
-def plot_cases_total():
     dates_csv = np.genfromtxt('/home/nuke/git/covid-19-data/data/us_covid-19_dates.csv', dtype='datetime64')
     cases_total_csv = np.genfromtxt('/home/nuke/git/covid-19-data/data/us_covid-19_cases_total.csv', dtype='int32')
 
@@ -21,7 +21,6 @@ def plot_cases_total():
     plt.show()
 
 # Plot Total Deaths
-def plot_deaths_total():
     dates_csv = np.genfromtxt('/home/nuke/git/covid-19-data/data/us_covid-19_dates.csv', dtype='datetime64')
     deaths_total_csv = np.genfromtxt('/home/nuke/git/covid-19-data/data/us_covid-19_deaths_total.csv', dtype='int32')
 
@@ -38,7 +37,6 @@ def plot_deaths_total():
     plt.show()
 
 # Plot Daily Cases
-def plot_cases_daily():
     dates_csv = np.genfromtxt('/home/nuke/git/covid-19-data/data/us_covid-19_dates.csv', dtype='datetime64')
     cases_daily_csv = np.genfromtxt('/home/nuke/git/covid-19-data/data/us_covid-19_cases_daily.csv', dtype='int32')
 
@@ -55,7 +53,6 @@ def plot_cases_daily():
     plt.show()
 
 # Plot Daily Deaths
-def plot_deaths_daily():
     dates_csv = np.genfromtxt('/home/nuke/git/covid-19-data/data/us_covid-19_dates.csv', dtype='datetime64')
     deaths_daily_csv = np.genfromtxt('/home/nuke/git/covid-19-data/data/us_covid-19_deaths_daily.csv', dtype='int32')
 
