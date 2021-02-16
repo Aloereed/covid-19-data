@@ -1,7 +1,7 @@
 ###### Reported numbers for 2021-02-15
 | Date   | 2021-02-15   |
 |:-------|:-------------|
-| Cases  | 55,552       |
+| Cases  | 55,372       |
 | Deaths | 994          |
 
 ###### Averages
