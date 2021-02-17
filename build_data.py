@@ -41,7 +41,7 @@ def build_data():
     np.savetxt('/home/nuke/git/covid-19-data/data/us_covid-19_cases_daily.csv', cases_daily, fmt='%d')
 
     # Create csv for daily data
-    df = pd.read_csv('/home/nuke/git/covid-19-data/us.csv', header=0, names=['date'])
+    df = pd.read_csv('/home/nuke/git/covid-19-data/data/us_covid-19_dates.csv', header=1, names=['date'])
     cases_daily = pd.read_csv('/home/nuke/git/covid-19-data/data/us_covid-19_cases_daily.csv', header=None, dtype=str)      
     deaths_daily = pd.read_csv('/home/nuke/git/covid-19-data/data/us_covid-19_deaths_daily.csv', header=None, dtype=str)
     df["daily cases"] = cases_daily
@@ -51,7 +51,7 @@ def build_data():
     # Create csv for total data                                                                                                 
     cases_total = pd.read_csv('/home/nuke/git/covid-19-data/data/us_covid-19_cases_total.csv', header=None, dtype=str)      
     deaths_total = pd.read_csv('/home/nuke/git/covid-19-data/data/us_covid-19_deaths_total.csv', header=None, dtype=str)
-    df["toal cases"] = cases_total
+    df["total cases"] = cases_total
     df["total deaths"] = deaths_total
     df.to_csv("/home/nuke/git/covid-19-data/data/us_covid-19_total.csv", index=False)
 
