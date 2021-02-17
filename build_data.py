@@ -56,7 +56,7 @@ def build_data():
     df.to_csv("/home/nuke/git/covid-19-data/data/us_covid-19_total.csv", index=False)
 
     # Create csv for all aggregated data
-    df = pd.read_csv('/home/nuke/git/covid-19-data/data/us_covid-19_data.csv', header=0, names=['date', 'total cases', 'total deaths'])
+    df = pd.read_csv('/home/nuke/git/covid-19-data/data/us_covid-19_total.csv', header=0, names=['date', 'total cases', 'total deaths'])
     df["daily cases"] = cases_daily
     df["daily deaths"] = deaths_daily
     df.to_csv("/home/nuke/git/covid-19-data/data/us_covid-19_data.csv", index=False)
