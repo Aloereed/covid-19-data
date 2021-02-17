@@ -38,6 +38,23 @@ def create_daily_report():
     df_avg.index.names = ['2020-01-21 - ' + str(today)]
 
     # Write to 'daily_report.md'
-    f = open("/home/nuke/git/covid-19-data/data/daily_report.md", "w")
-    f.write("###### Reported numbers for " + str(today) + "\n" + df_today.to_markdown() + "\n\n###### Averages\n" + df_avg.to_markdown())
+    f = open("/home/nuke/git/covid-19-data/README.md", "w")
+    f.write("# US COVID-19 [Data](https://github.com/drebrb/covid-19-data/blob/master/us_covid-19_data.csv)\n\n###### Reported numbers for " + str(today) + "\n" + df_today.to_markdown() + "\n\n###### Averages\n" + df_avg.to_markdown() + """
+\n\n## [Total](https://github.com/drebrb/covid-19-data/blob/master/us_covid-19_total.csv)
+
+### Total Cases
+![Plot](https://github.com/drebrb/covid-19-data/blob/master/plots/US_Total_COVID-19_Cases.png)
+
+### Total Deaths
+![Plot](https://github.com/drebrb/covid-19-data/blob/master/plots/US_Total_COVID-19_Deaths.png)
+
+
+## [Daily](https://github.com/drebrb/covid-19-data/blob/master/us_covid-19_daily.csv) 
+
+### Daily Cases
+![Plot](https://github.com/drebrb/covid-19-data/blob/master/plots/US_Daily_COVID-19_Cases.png)
+
+### Daily Deaths
+![Plot](https://github.com/drebrb/covid-19-data/blob/master/plots/US_Daily_COVID-19_Deaths.png)
+""")
     f.close()
