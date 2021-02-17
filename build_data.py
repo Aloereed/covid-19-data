@@ -41,7 +41,7 @@ def build_data():
     np.savetxt('/home/nuke/git/covid-19-data/data/us_covid-19_cases_daily.csv', cases_daily, fmt='%d')
 
     # csv files needed to aggregate all data
-    df = pd.read_csv('/home/nuke/git/covid-19-data/us.csv', header=0, names=['date'])
+    df = pd.read_csv('/home/nuke/git/covid-19-data/data/us_covid-19_dates.csv', header=0, names=['date'])
     cases_daily = pd.read_csv('/home/nuke/git/covid-19-data/data/us_covid-19_cases_daily.csv', header=None, dtype=str)
     deaths_daily = pd.read_csv('/home/nuke/git/covid-19-data/data/us_covid-19_deaths_daily.csv', header=None, dtype=str)
 
