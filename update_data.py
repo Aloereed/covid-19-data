@@ -2,7 +2,7 @@
 
 from build_data import *
 from plot_data import *
-from daily_report import *
+from write_to_readme import *
 import os
 
 # Update data
@@ -11,8 +11,8 @@ build_data()
 # Plot data to png files
 plot_data()
 
-# Write to daily report
-create_daily_report()
+# Write to README
+write_to_readme()
 
 # Commit to github
 os.system('git add . && git commit -m "Updating data." && git push')

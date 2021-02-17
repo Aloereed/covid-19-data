@@ -3,7 +3,7 @@
 import numpy as np
 import pandas as pd 
 
-def create_daily_report():
+def write_to_readme():
     # Import csv files
     new_cases_csv = np.genfromtxt('/home/nuke/git/covid-19-data/data/us_covid-19_new_cases.csv', dtype='int32')
     new_deaths_csv = np.genfromtxt('/home/nuke/git/covid-19-data/data/us_covid-19_new_deaths.csv', dtype='int32')
@@ -15,7 +15,7 @@ def create_daily_report():
     cases_today = cases_array[cases_length - 1]
     cases_mean = np.mean(cases_array)
 
-    # Build array for daily death count and mean to date
+    # Build array for new deaths and mean to date
     deaths_array = np.array(new_deaths_csv)
     deaths_length = len(deaths_array)
     deaths_today = deaths_array[deaths_length - 1]
@@ -37,7 +37,7 @@ def create_daily_report():
     df_avg = pd.DataFrame({'avg': [f"{int(cases_mean):,d}", f"{int(deaths_mean):,d}"]}, index=index_avg)
     df_avg.index.names = ['2020-01-21 - ' + str(today)]
 
-    # Write to 'daily_report.md'
+    # Write to 'README.md'
     f = open("/home/nuke/git/covid-19-data/README.md", "w")
     f.write("# US COVID-19 [Data](https://github.com/drebrb/covid-19-data/blob/master/data/us_covid-19_data.csv)\n\n###### Reported numbers for " + str(today) + "\n" + df_today.to_markdown() + "\n\n###### Averages\n" + df_avg.to_markdown() + """
 \n\n## [Total Cases and Deaths](https://github.com/drebrb/covid-19-data/blob/master/data/us_covid-19_total.csv)
