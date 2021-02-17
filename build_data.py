@@ -46,7 +46,7 @@ def build_data():
     cases_total = pd.read_csv('/home/nuke/git/covid-19-data/data/us_covid-19_cases_total.csv', header=None, dtype=str)
     deaths_total = pd.read_csv('/home/nuke/git/covid-19-data/data/us_covid-19_deaths_total.csv', header=None, dtype=str)
     
-    # Create daily csv
+    # Create csv for daily cases and deaths
     df = pd.read_csv('/home/nuke/git/covid-19-data/data/us_covid-19_dates.csv', names=['date'])
     df["daily cases"] = cases_daily
     df["daily deaths"] = deaths_daily
