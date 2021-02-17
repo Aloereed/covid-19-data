@@ -41,26 +41,25 @@ def build_data():
     np.savetxt('/home/nuke/git/covid-19-data/data/us_covid-19_cases_daily.csv', cases_daily, fmt='%d')
 
     # csv files needed to aggregate all data
-    dates = pd.read_csv('/home/nuke/git/covid-19-data/data/us_covid-19_dates.csv', names=['date'])
     cases_daily = pd.read_csv('/home/nuke/git/covid-19-data/data/us_covid-19_cases_daily.csv', header=None, dtype=str)
     deaths_daily = pd.read_csv('/home/nuke/git/covid-19-data/data/us_covid-19_deaths_daily.csv', header=None, dtype=str)
     cases_total = pd.read_csv('/home/nuke/git/covid-19-data/data/us_covid-19_cases_total.csv', header=None, dtype=str)
     deaths_total = pd.read_csv('/home/nuke/git/covid-19-data/data/us_covid-19_deaths_total.csv', header=None, dtype=str)
     
     # Create daily csv
-    df = dates
+    df = pd.read_csv('/home/nuke/git/covid-19-data/data/us_covid-19_dates.csv', names=['date'])
     df["daily cases"] = cases_daily
     df["daily deaths"] = deaths_daily
     df.to_csv("/home/nuke/git/covid-19-data/data/us_covid-19_daily.csv", index=False)
 
     # Create csv for total cases and deaths
-    df = dates
+    df = pd.read_csv('/home/nuke/git/covid-19-data/data/us_covid-19_dates.csv', names=['date'])
     df["total cases"] = cases_total
     df["total deaths"] = deaths_total
     df.to_csv("/home/nuke/git/covid-19-data/data/us_covid-19_total.csv", index=False)
 
     # Create csv for total cases and deaths
-    df = dates
+    df = pd.read_csv('/home/nuke/git/covid-19-data/data/us_covid-19_dates.csv', names=['date'])
     df["total cases"] = cases_total
     df["total deaths"] = deaths_total
     df["daily cases"] = cases_daily
