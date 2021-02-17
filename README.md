@@ -1,4 +1,4 @@
-# US COVID-19 [Data](https://github.com/drebrb/covid-19-data/blob/master/us_covid-19_data.csv)
+# US COVID-19 [Data](https://github.com/drebrb/covid-19-data/data/blob/master/us_covid-19_data.csv)
 
 ###### Reported numbers for 2021-02-16
 | Date   | 2021-02-16   |
