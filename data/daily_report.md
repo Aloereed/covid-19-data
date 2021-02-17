@@ -1,11 +1,11 @@
-###### Reported numbers for 2021-02-15
-| Date   | 2021-02-15   |
+###### Reported numbers for 2021-02-16
+| Date   | 2021-02-16   |
 |:-------|:-------------|
-| Cases  | 55,372       |
-| Deaths | 994          |
+| Cases  | 64,376       |
+| Deaths | 1,707        |
 
 ###### Averages
-| 2020-01-21 - 2021-02-15   | avg    |
+| 2020-01-21 - 2021-02-16   | avg    |
 |:--------------------------|:-------|
-| Cases per day             | 70,761 |
-| Deaths per day            | 1,240  |
+| Cases per day             | 70,745 |
+| Deaths per day            | 1,241  |
