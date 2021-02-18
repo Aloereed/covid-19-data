@@ -26,12 +26,12 @@ def build_data():
     total_cases_csv = np.genfromtxt('/home/nuke/git/covid-19-data/data/us_covid-19_total_cases.csv', dtype='int32')
     total_deaths_csv = np.genfromtxt('/home/nuke/git/covid-19-data/data/us_covid-19_total_deaths.csv', dtype='int32')
 
-    # Calculate daily cases
+    # Calculate new cases
     total_cases = np.array(total_cases_csv)
     new_cases = np.diff(total_cases)
     new_cases = np.insert(new_cases, 0, 1)
 
-    # Calculate daily deaths
+    # Calculate new deaths
     total_deaths = np.array(total_deaths_csv)
     new_deaths = np.diff(total_deaths)
     new_deaths = np.insert(new_deaths, 0, 0)
