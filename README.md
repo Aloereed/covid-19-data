@@ -6,9 +6,9 @@
 | 64,376      | 1,707        |
 
 ###### 7-day average
-|    | Cases   | Deaths   |
-|---:|:--------|:---------|
-|  0 | 81,199  | 2,821    |
+| Cases   | Deaths   |
+|:--------|:---------|
+| 81,199  | 2,821    |
 
 ## [Total Cases and Deaths](https://github.com/drebrb/covid-19-data/blob/master/data/us_covid-19_total.csv)
 
