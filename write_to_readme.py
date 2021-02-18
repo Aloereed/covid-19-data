@@ -39,7 +39,7 @@ def write_to_readme():
     # Write to 'README.md'
     f = open("/home/nuke/git/covid-19-data/README.md", "w")
     f.write("""# US COVID-19 [Data](https://github.com/drebrb/covid-19-data/blob/master/data/us_covid-19_data.csv)
-\n###### Reported numbers for """ + str(today) + "\n" + df_today.to_markdown() + "\n\n###### 7-day average\n" + df_avg.to_markdown() +
+\n###### Reported numbers for """ + str(today) + "\n" + df_today.to_markdown(index=False) + "\n\n###### 7-day average\n" + df_avg.to_markdown() +
 """
 \n## [Total Cases and Deaths](https://github.com/drebrb/covid-19-data/blob/master/data/us_covid-19_total.csv)
 
