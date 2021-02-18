@@ -14,5 +14,5 @@ plot_data()
 # Write to README
 write_to_readme()
 
-# Commit to github
+# push to github
 os.system('git add . && git commit -m "Updating data." && git push')
