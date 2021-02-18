@@ -31,26 +31,23 @@ def write_to_readme():
 
     # Dataframe for cases and deaths in the last 24 hours
     today = date_today
-    index_today = ['New cases', 'New deaths']
-    df_today = pd.DataFrame({str(today): [f"{cases_today:,d}", f"{deaths_today:,d}"]}, index=index_today)
-    df_today.index.names = ['Date']
+    df_today = pd.DataFrame({'New cases': [f"{cases_today:,d}"], 'New Deaths': [f"{deaths_today:,d}"]})
 
     # DataFrame for 7-day average
-    index_avg = ['Cases', 'Deaths']
-    df_avg = pd.DataFrame({'7-day avg': [f"{int(cases_mean):,d}", f"{int(deaths_mean):,d}"]}, index=index_avg)
-    df_avg.index.names = [str(date_7_days_ago) + " - " + str(today)]
+    df_avg = pd.DataFrame({'Cases': [f"{int(cases_mean):,d}"], 'Deaths': [f"{int(deaths_mean):,d}"]})
 
     # Write to 'README.md'
     f = open("/home/nuke/git/covid-19-data/README.md", "w")
-    f.write("# US COVID-19 [Data](https://github.com/drebrb/covid-19-data/blob/master/data/us_covid-19_data.csv)\n\n###### Reported numbers for " + str(today) + "\n" + df_today.to_markdown() + "\n\n###### 7-day average\n" + df_avg.to_markdown() + """
-\n\n## [Total Cases and Deaths](https://github.com/drebrb/covid-19-data/blob/master/data/us_covid-19_total.csv)
+    f.write("""# US COVID-19 [Data](https://github.com/drebrb/covid-19-data/blob/master/data/us_covid-19_data.csv)
+\n###### Reported numbers for """ + str(today) + "\n" + df_today.to_markdown() + "\n\n###### 7-day average\n" + df_avg.to_markdown() +
+"""
+\n## [Total Cases and Deaths](https://github.com/drebrb/covid-19-data/blob/master/data/us_covid-19_total.csv)
 
 ### Cases
 ![Plot](https://github.com/drebrb/covid-19-data/blob/master/plots/US_Total_COVID-19_Cases.png)
 
 ### Deaths
 ![Plot](https://github.com/drebrb/covid-19-data/blob/master/plots/US_Total_COVID-19_Deaths.png)
-
 
 ## [New Cases and Deaths](https://github.com/drebrb/covid-19-data/blob/master/data/us_covid-19_new.csv) 
 
