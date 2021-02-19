@@ -9,19 +9,25 @@ def write_to_readme():
     new_deaths_csv = np.genfromtxt('/home/nuke/git/covid-19-data/data/us_covid-19_new_deaths.csv', dtype='int32')
     dates_csv = np.genfromtxt('/home/nuke/git/covid-19-data/data/us_covid-19_dates.csv', dtype='datetime64')
 
-    # Build array for new cases and 7-day mean
+    # Build array for new cases
     cases_array = np.array(new_cases_csv)
     cases_length = len(cases_array)
     cases_today = cases_array[cases_length - 1]
+
+    # Build array for 7-day mean (new cases)
     cases_last_7_days = cases_array[-7:]
     cases_mean = np.mean(cases_last_7_days)
+    cases_mean = int(cases_mean)
 
-    # Build array for new deaths and 7-day mean
+    # Build array for new deaths
     deaths_array = np.array(new_deaths_csv)
     deaths_length = len(deaths_array)
     deaths_today = deaths_array[deaths_length - 1]
+    
+    # Build array for 7-day mean (new deaths)
     deaths_last_7_days = deaths_array[-7:]
     deaths_mean = np.mean(deaths_last_7_days)
+    deaths_mean = int(deaths_mean)
 
     # Dates 
     date_array = np.array(dates_csv)
@@ -31,15 +37,15 @@ def write_to_readme():
 
     # Dataframe for cases and deaths in the last 24 hours
     today = date_today
-    df_today = pd.DataFrame({'New cases': [f"{cases_today:,d}"], 'New Deaths': [f"{deaths_today:,d}"]})
+    df_today = pd.DataFrame({'New cases': [cases_today], 'New Deaths': [deaths_today]}).to_markdown(index=False)
 
     # DataFrame for 7-day average
-    df_avg = pd.DataFrame({'Cases': [f"{int(cases_mean):,d}"], 'Deaths': [f"{int(deaths_mean):,d}"]})
+    df_avg = pd.DataFrame({'Cases': [cases_mean], 'Deaths': [deaths_mean]}).to_markdown(index=False)
 
     # Write to 'README.md'
     f = open("/home/nuke/git/covid-19-data/README.md", "w")
     f.write("""# US COVID-19 [Data](https://github.com/drebrb/covid-19-data/blob/master/data/us_covid-19_data.csv)
-\n###### Reported numbers for """ + str(today) + "\n" + df_today.to_markdown(index=False) + "\n\n###### 7-day average\n" + df_avg.to_markdown(index=False) +
+\n###### Reported numbers for """ + str(today) + "\n" + df_today + "\n\n###### 7-day average\n" + df_avg +
 """
 \n## [Total Cases and Deaths](https://github.com/drebrb/covid-19-data/blob/master/data/us_covid-19_total.csv)
 
