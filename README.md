@@ -1,14 +1,14 @@
 # US COVID-19 [Data](https://github.com/drebrb/covid-19-data/blob/master/data/us_covid-19_data.csv)
 
-###### Reported numbers for 2021-02-17
+###### Reported numbers for 2021-02-18
 | New cases   | New Deaths   |
 |:------------|:-------------|
-| 70,176      | 2,471        |
+| 71,874      | 2,620        |
 
 ###### 7-day average
 | Cases   | Deaths   |
 |:--------|:---------|
-| 77,665  | 2,709    |
+| 72,847  | 2,529    |
 
 ## [Total Cases and Deaths](https://github.com/drebrb/covid-19-data/blob/master/data/us_covid-19_total.csv)
 
