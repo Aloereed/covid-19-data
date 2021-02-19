@@ -13,21 +13,25 @@ def write_to_readme():
     cases_array = np.array(new_cases_csv)
     cases_length = len(cases_array)
     cases_today = cases_array[cases_length - 1]
+    cases_today = f"{cases_today:,d}"
 
     # Build array for 7-day mean (new cases)
     cases_last_7_days = cases_array[-7:]
     cases_mean = np.mean(cases_last_7_days)
     cases_mean = int(cases_mean)
+    cases_mean = f"{cases_mean:,d}"
 
     # Build array for new deaths
     deaths_array = np.array(new_deaths_csv)
     deaths_length = len(deaths_array)
     deaths_today = deaths_array[deaths_length - 1]
+    deaths_today = f"{deaths_today:,d}"
     
     # Build array for 7-day mean (new deaths)
     deaths_last_7_days = deaths_array[-7:]
     deaths_mean = np.mean(deaths_last_7_days)
     deaths_mean = int(deaths_mean)
+    deaths_mean = f"{deaths_mean:,d}"
 
     # Dates 
     date_array = np.array(dates_csv)
@@ -37,10 +41,10 @@ def write_to_readme():
 
     # Dataframe for cases and deaths in the last 24 hours
     today = date_today
-    df_today = pd.DataFrame({'New cases': [cases_today], 'New Deaths': [deaths_today]}).to_markdown(index=False)
+    df_today = pd.DataFrame({'New cases': [cases_today], 'New Deaths': [deaths_today]}).to_markdown(index=False, disable_numparse=True)
 
     # DataFrame for 7-day average
-    df_avg = pd.DataFrame({'Cases': [cases_mean], 'Deaths': [deaths_mean]}).to_markdown(index=False)
+    df_avg = pd.DataFrame({'Cases': [cases_mean], 'Deaths': [deaths_mean]}).to_markdown(index=False, disable_numparse=True)
 
     # Write to 'README.md'
     f = open("/home/nuke/git/covid-19-data/README.md", "w")
