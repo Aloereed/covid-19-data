@@ -6,7 +6,8 @@ from write_to_readme import *
 import os
 
 # Change to repo directory
-os.chdir('/home/nuke/git/covid-19-data')
+if os.getcwd() != '/home/nuke/git/covid-19-data':
+    os.chdir('/home/nuke/git/covid-19-data')
 
 # Update data
 build_data()
