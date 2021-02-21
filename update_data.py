@@ -5,6 +5,9 @@ from plot_data import *
 from write_to_readme import *
 import os
 
+# Change to repo directory
+os.chdir('/home/nuke/git/covid-19-data')
+
 # Update data
 build_data()
 
