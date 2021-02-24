@@ -4,6 +4,7 @@ import requests
 import pandas as pd
 import io
 import numpy as np
+from ops import *
 
 def build_data():
     # Fetch data
@@ -13,12 +14,12 @@ def build_data():
     df.to_csv("us.csv", index=False)
 
     # Paths to csv's
-    fetched_data_path = ('/home/nuke/git/covid-19-data/us.csv')
-    dates_path = ('/home/nuke/git/covid-19-data/data/us_covid-19_dates.csv')
-    total_cases_path = ('/home/nuke/git/covid-19-data/data/us_covid-19_total_cases.csv')
-    total_deaths_path = ('/home/nuke/git/covid-19-data/data/us_covid-19_total_deaths.csv')
-    new_cases_path = ('/home/nuke/git/covid-19-data/data/us_covid-19_new_cases.csv')
-    new_deaths_path = ('/home/nuke/git/covid-19-data/data/us_covid-19_new_deaths.csv')
+    fetched_data_path = path('us.csv')
+    dates_path = path('data/us_covid-19_dates.csv')
+    total_cases_path = path('data/us_covid-19_total_cases.csv')
+    total_deaths_path = path('data/us_covid-19_total_deaths.csv')
+    new_cases_path = path('data/us_covid-19_new_cases.csv')
+    new_deaths_path = path('data/us_covid-19_new_deaths.csv')
 
     # Extract each column individually
     dates = pd.read_csv(fetched_data_path, usecols=['date'])
@@ -58,13 +59,13 @@ def build_data():
     df = pd.read_csv(dates_path, names=['date'])
     df["total cases"] = total_cases
     df["total deaths"] = total_deaths
-    df.to_csv('/home/nuke/git/covid-19-data/data/us_covid-19_total.csv', index=False)
+    df.to_csv(path('data/us_covid-19_total.csv'), index=False)
     
     # Create csv for new cases and deaths
     df = pd.read_csv(dates_path, names=['date'])
     df["new cases"] = new_cases
     df["new deaths"] = new_deaths
-    df.to_csv('/home/nuke/git/covid-19-data/data/us_covid-19_new.csv', index=False)
+    df.to_csv(path('data/us_covid-19_new.csv'), index=False)
 
     # Create csv for all aggregated data
     df = pd.read_csv(dates_path, names=['date'])
@@ -72,4 +73,4 @@ def build_data():
     df["total deaths"] = total_deaths
     df["new cases"] = new_cases
     df["new deaths"] = new_deaths 
-    df.to_csv('/home/nuke/git/covid-19-data/data/us_covid-19_data.csv', index=False)
+    df.to_csv(path('data/us_covid-19_data.csv'), index=False)

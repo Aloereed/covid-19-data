@@ -2,14 +2,15 @@
 
 import numpy as np
 import matplotlib.pyplot as plt
+from ops import *
 
 def plot_data():
     # csv files needed for arrays
-    dates_csv = np.genfromtxt('/home/nuke/git/covid-19-data/data/us_covid-19_dates.csv', dtype='datetime64')
-    total_cases_csv = np.genfromtxt('/home/nuke/git/covid-19-data/data/us_covid-19_total_cases.csv', dtype='int32')
-    total_deaths_csv = np.genfromtxt('/home/nuke/git/covid-19-data/data/us_covid-19_total_deaths.csv', dtype='int32')
-    new_cases_csv = np.genfromtxt('/home/nuke/git/covid-19-data/data/us_covid-19_new_cases.csv', dtype='int32')
-    new_deaths_csv = np.genfromtxt('/home/nuke/git/covid-19-data/data/us_covid-19_new_deaths.csv', dtype='int32')
+    dates_csv = np.genfromtxt(path('data/us_covid-19_dates.csv'), dtype='datetime64')
+    total_cases_csv = np.genfromtxt(path('data/us_covid-19_total_cases.csv'), dtype='int32')
+    total_deaths_csv = np.genfromtxt(path('data/us_covid-19_total_deaths.csv'), dtype='int32')
+    new_cases_csv = np.genfromtxt(path('data/us_covid-19_new_cases.csv'), dtype='int32')
+    new_deaths_csv = np.genfromtxt(path('data/us_covid-19_new_deaths.csv'), dtype='int32')
 
     # X axis for all plots
     x = np.array(dates_csv)
@@ -23,7 +24,7 @@ def plot_data():
     plt.grid(True, ls = "-.")
     plt.yticks(np.arange(min(y), max(y) + 10))
     plt.plot(x, y, color = "b")
-    plt.savefig("/home/nuke/git/covid-19-data/plots/US_Total_COVID-19_Cases.png")
+    plt.savefig(path('plots/US_Total_COVID-19_Cases.png'))
     plt.show()
 
     # Plot Total Deaths
@@ -35,7 +36,7 @@ def plot_data():
     plt.grid(True, ls = "-.")
     plt.yticks(np.arange(min(y), max(y) + 100, 50))
     plt.plot(x, y, color = "b")
-    plt.savefig("/home/nuke/git/covid-19-data/plots/US_Total_COVID-19_Deaths.png")
+    plt.savefig(path('plots/US_Total_COVID-19_Deaths.png'))
     plt.show()
 
     # Plot New Cases
@@ -47,7 +48,7 @@ def plot_data():
     plt.grid(True, ls = "-.")
     plt.yticks(np.arange(min(y), max(y) + 100, 50))
     plt.plot(x, y, color = "b")
-    plt.savefig("/home/nuke/git/covid-19-data/plots/US_New_COVID-19_Cases.png")
+    plt.savefig(path('plots/US_New_COVID-19_Cases.png'))
     plt.show()
 
     # Plot New Deaths
@@ -59,5 +60,5 @@ def plot_data():
     plt.grid(True, ls = "-.")
     plt.yticks(np.arange(min(y), max(y) + 1000, 500))
     plt.plot(x, y, color = "b")
-    plt.savefig("/home/nuke/git/covid-19-data/plots/US_New_COVID-19_Deaths.png")
+    plt.savefig(path('plots/US_New_COVID-19_Deaths.png'))
     plt.show()
