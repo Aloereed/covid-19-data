@@ -2,12 +2,13 @@
 
 import numpy as np
 import pandas as pd 
+from ops import *
 
 def write_to_readme():
     # Import csv files
-    new_cases_csv = np.genfromtxt('/home/nuke/git/covid-19-data/data/us_covid-19_new_cases.csv', dtype='int32')
-    new_deaths_csv = np.genfromtxt('/home/nuke/git/covid-19-data/data/us_covid-19_new_deaths.csv', dtype='int32')
-    dates_csv = np.genfromtxt('/home/nuke/git/covid-19-data/data/us_covid-19_dates.csv', dtype='datetime64')
+    new_cases_csv = np.genfromtxt(path('data/us_covid-19_new_cases.csv'), dtype='int32')
+    new_deaths_csv = np.genfromtxt(path('data/us_covid-19_new_deaths.csv'), dtype='int32')
+    dates_csv = np.genfromtxt(path('data/us_covid-19_dates.csv'), dtype='datetime64')
 
     # Build array for new cases
     cases_array = np.array(new_cases_csv)
@@ -47,7 +48,7 @@ def write_to_readme():
     df_avg = pd.DataFrame({'Cases': [cases_mean], 'Deaths': [deaths_mean]}).to_markdown(index=False, disable_numparse=True)
 
     # Write to 'README.md'
-    f = open("/home/nuke/git/covid-19-data/README.md", "w")
+    f = open(path('README.md'), "w")
     f.write("""# US COVID-19 [Data](https://github.com/drebrb/covid-19-data/blob/master/data/us_covid-19_data.csv)
 \n###### Reported numbers for """ + str(today) + "\n" + df_today + "\n\n###### 7-day average\n" + df_avg +
 """
