@@ -13,13 +13,13 @@ for name in (dirs):
         exit(1)
 
 # Update data
-os.system('python3 build_data.py')
+os.system('build_data.py')
 
 # Plot data to png files
-os.system('python3 plot_data.py')
+os.system('plot_data.py')
 
 # Write to README
-os.system('python3 write_to_readme.py')
+os.system('write_to_readme.py')
 
 # push to github
 os.system('git add . && git commit -m "Updating data." && git push')
