@@ -30,6 +30,7 @@ def build_data():
     dates.to_csv(dates_path, header=False, index=False)
     total_cases.to_csv(total_cases_path, header=False, index=False)
     total_deaths.to_csv(total_deaths_path, header=False, index=False)
+    os.remove(fetched_data_path)
 
     # csv files needed to build arrays
     total_cases_csv = np.genfromtxt(total_cases_path, dtype='int32')
