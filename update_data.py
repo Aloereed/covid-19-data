@@ -12,14 +12,21 @@ for name in (dirs):
         print("Error: '" + name + "' needs to be created.")
         exit(1)
 
+# Check OS
+if os.name == 'nt':
+    a = ''
+
+else:
+    a = 'python3 '
+
 # Update data
-os.system('build_data.py')
+os.system(a + 'build_data.py')
 
 # Plot data to png files
-os.system('plot_data.py')
+os.system(a + 'plot_data.py')
 
 # Write to README
-os.system('write_to_readme.py')
+os.system(a + 'write_to_readme.py')
 
 # push to github
 os.system('git add . && git commit -m "Updating data." && git push')

@@ -26,17 +26,16 @@ new_deaths = np.diff(total_deaths)
 new_deaths = np.insert(new_deaths, 0, 0)
 
 # Create csv for total cases and deaths
-d = {'date': dates, 'total cases': total_cases, 'total deaths': total_deaths}
-df = pd.DataFrame(data=d)
+df = pd.DataFrame({'date': dates, 'total cases': total_cases,
+    'total deaths': total_deaths})
 df.to_csv('data/us_covid-19_total.csv', index=False)
 
 # Create csv for new cases and deaths
-d = {'date': dates, 'new cases': new_cases, 'new deaths': new_deaths}
-df = pd.DataFrame(data=d)
+df = pd.DataFrame({'date': dates, 'new cases': new_cases, 
+    'new deaths': new_deaths})
 df.to_csv('data/us_covid-19_new.csv', index=False)
 
 # Create csv for all aggregated data
-d = {'date': dates, 'total cases': total_cases, 'total deaths': total_deaths,
-        'new cases': new_cases, 'new deaths': new_deaths}
-df = pd.DataFrame(data=d)
+df = pd.DataFrame({'date': dates, 'total cases': total_cases, 
+    'total deaths': total_deaths, 'new cases': new_cases, 'new deaths': new_deaths})
 df.to_csv('data/us_covid-19_data.csv', index=False)
