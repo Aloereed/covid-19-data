@@ -1,7 +1,7 @@
 # US COVID-19 [Data](https://github.com/drebrb/covid-19-data/blob/master/data/us_covid-19_data.csv)
 
 ###### Reported numbers for 2021-02-24
-| New cases   | New Deaths   |
+| New Cases   | New Deaths   |
 |:------------|:-------------|
 | 70,768      | 3,210        |
 
