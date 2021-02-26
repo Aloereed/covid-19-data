@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import os
+import build_data, plot_data, write_to_readme
 
 # Check for necessary directories
 dirs = ('data', 'plots')
@@ -12,21 +13,14 @@ for name in (dirs):
         print("Error: '" + name + "' needs to be created.")
         exit(1)
 
-# Check OS
-if os.name == 'nt':
-    a = ''
-
-else:
-    a = 'python3 '
-
 # Update data
-os.system(a + 'build_data.py')
+build_data
 
 # Plot data to png files
-os.system(a + 'plot_data.py')
+plot_data
 
 # Write to README
-os.system(a + 'write_to_readme.py')
+write_to_readme
 
 # push to github
 os.system('git add . && git commit -m "Updating data." && git push')
