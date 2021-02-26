@@ -8,7 +8,7 @@ dirs = ('data', 'plots')
 for name in (dirs):
     isdir = os.path.isdir(name)
     if isdir != True:
-        print("Error: '" + name + "' needs to be created.")
+        print(f'Error: {name} needs to be created.')
         if name == 'plots':
             exit(1)
 
