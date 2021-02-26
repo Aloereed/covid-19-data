@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
-from build_data import *
+from build_data import dates, total_cases, total_deaths, new_cases, new_deaths
+import numpy as np
 import matplotlib.pyplot as plt
 
 # x axis for all plots

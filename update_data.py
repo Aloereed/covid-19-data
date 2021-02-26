@@ -11,7 +11,9 @@ for name in (dirs):
 
     if isdir != True:
         print("Error: '" + name + "' needs to be created.")
-        exit(1)
+ 
+        if name == 'plots':
+            exit(1)
 
 # Update data
 build_data

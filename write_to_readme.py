@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 
-from build_data import *
+from build_data import new_cases, new_deaths, dates
+import numpy as np
+import pandas as pd
 
 # New Cases in the last 24 hours
 cases_array = new_cases
