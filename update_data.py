@@ -5,13 +5,10 @@ import build_data, plot_data, write_to_readme
 
 # Check for necessary directories
 dirs = ('data', 'plots')
-
 for name in (dirs):
     isdir = os.path.isdir(name)
-
     if isdir != True:
         print("Error: '" + name + "' needs to be created.")
- 
         if name == 'plots':
             exit(1)
 
