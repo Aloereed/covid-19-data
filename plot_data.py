@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 
-from build_data import dates, total_cases, total_deaths, new_cases, new_deaths
+from build_data import date, total_cases, total_deaths, new_cases, new_deaths
 import numpy as np
 import matplotlib.pyplot as plt
 
 # x axis for all plots
-x = np.array(dates, dtype='datetime64')
+x = np.array(date, dtype='datetime64')
 
 # Plot Total Cases
 y = total_cases / 1000000

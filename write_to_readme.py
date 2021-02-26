@@ -1,36 +1,32 @@
 #!/usr/bin/env python3
 
-from build_data import new_cases, new_deaths, dates
+from build_data import new_cases, new_deaths, date
 import numpy as np
 import pandas as pd
 
-# New Cases in the last 24 hours
-cases_array = new_cases
-length = len(new_cases)
-new_cases = new_cases[length - 1]
-new_cases = f'{new_cases:,d}'
-
-# New Deaths in the last 24 hours
-deaths_array = new_deaths
-length = len(new_deaths)
-new_deaths = new_deaths[length - 1]
-new_deaths = f'{new_deaths:,d}'
-
 # 7-day mean (new cases)
-cl7d = cases_array[-7:]
+cl7d = new_cases[-7:]
 cases_mean = np.mean(cl7d)
 cases_mean = int(cases_mean)
 cases_mean = f'{cases_mean:,d}'
 
 # 7-day mean (new deaths)
-dl7d = deaths_array[-7:]
+dl7d = new_deaths[-7:]
 deaths_mean = np.mean(dl7d)
 deaths_mean = int(deaths_mean)
 deaths_mean = f'{deaths_mean:,d}'
 
+# New Cases in the last 24 hours
+new_cases = new_cases[-1]
+new_cases = f'{new_cases:,d}'
+
+# New Deaths in the last 24 hours
+new_deaths = new_deaths[-1]
+new_deaths = f'{new_deaths:,d}'
+
 # Date
-length = len(dates)
-date = dates[length - 1]
+date = np.array(date, dtype='datetime64')
+date = date[-1]
 date = str(date)
 
 # DataFrame for new cases and deaths in the last 24 hours 
