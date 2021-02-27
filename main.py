@@ -99,8 +99,7 @@ cmean = np.mean(new_cases[-7:])
 dmean = np.mean(new_deaths[-7:])
 
 # Date
-date = np.array(date, dtype='datetime64')
-date = date[-1]
+date = x[-1]
 
 # DataFrame for new cases and deaths in the last 24 hours 
 df_24 = pd.DataFrame({'New cases': [f'{cases:,d}'], 'New deaths': [f'{deaths:,d}']})
