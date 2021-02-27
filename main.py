@@ -10,8 +10,8 @@ import os
 
 # Fetch data
 url = 'https://raw.githubusercontent.com/nytimes/covid-19-data/master/us.csv'
-download = requests.get(url).content
-df = pd.read_csv(io.StringIO(download.decode('utf-8')))
+dat = requests.get(url).content
+df = pd.read_csv(io.StringIO(dat.decode('utf-8')))
 
 # Extract each column individually
 date = df['date']
@@ -112,8 +112,8 @@ df_avg = pd.DataFrame({'Cases': [f'{int(cmean):,d}'], 'Deaths': [f'{int(dmean):,
 df_avg = df_avg.to_markdown(index=False, disable_numparse=True)
 
 # Write to 'README.md'
-f = open('README.md', 'w')
-f.write(f'''# US COVID-19 [Data](https://github.com/drebrb/covid-19-data/blob/master/data/us_covid-19_data.csv)
+with open('README.md', 'w') as f:
+    f.write(f'''# US COVID-19 [Data](https://github.com/drebrb/covid-19-data/blob/master/data/us_covid-19_data.csv)
 ###### Reported numbers for {str(date)} 
 {df_24}
 ###### 7-day average 
@@ -128,7 +128,6 @@ f.write(f'''# US COVID-19 [Data](https://github.com/drebrb/covid-19-data/blob/ma
 ![Plot](https://github.com/drebrb/covid-19-data/blob/master/plots/US_New_COVID-19_Cases.png)
 ### Deaths
 ![Plot](https://github.com/drebrb/covid-19-data/blob/master/plots/US_New_COVID-19_Deaths.png)''')
-f.close()
 
 # **** push to github ****
 
