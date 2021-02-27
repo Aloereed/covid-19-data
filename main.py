@@ -21,12 +21,14 @@ deaths = df['deaths']
 # Calculate new cases
 total_cases = np.array(cases)
 new_cases = np.diff(total_cases)
-new_cases = np.insert(new_cases, 0, 1)
+k = total_cases[0]
+new_cases = np.insert(new_cases, 0, k)
 
 # Calculate new deaths
 total_deaths = np.array(deaths)
 new_deaths = np.diff(total_deaths)
-new_deaths = np.insert(new_deaths, 0, 0)
+k = total_deaths[0]
+new_deaths = np.insert(new_deaths, 0, k)
 
 # Create csv for total cases and deaths
 df = pd.DataFrame({'date': date, 'total cases': total_cases,
