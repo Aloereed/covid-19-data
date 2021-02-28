@@ -1,6 +1,6 @@
-def mk_dir(*der):
+def mk_dir(*dirs):
     import os
-    for d in der:
+    for d in dirs:
         if not os.path.isdir(d):
             print(f"creating '{os.path.join(os.getcwd(), d)}'")
             os.mkdir(d)
