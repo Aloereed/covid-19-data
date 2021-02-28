@@ -17,11 +17,11 @@ def fetch(url):
     digest = sig.hexdigest()
     fp = os.path.join(tempfile.gettempdir(), hashlib.sha256(digest.encode('utf-8')).hexdigest())
     if os.path.isfile(fp) and os.stat(fp).st_size > 0:
-        print("reading data")
+        print("reading")
         with open(fp, 'rb') as f:
             dat = f.read()
     else:
-        print("writing data")
+        print("writing to '/tmp'")
         with requests.get(url) as response:
             response.raise_for_status()
             dat = response.content
