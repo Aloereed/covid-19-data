@@ -6,11 +6,28 @@ def mk_dir(*der):
             os.mkdir(d)
 
 def fetch(url):
-    import requests
-    print(f"fetching '{url}'")
-    with requests.get(url) as response:
+    import requests, hashlib, os, tempfile
+    print("comparing hashes")
+    with requests.get(url, stream=True) as response:
         response.raise_for_status()
-        dat = response.content
+        r = response
+    sig = hashlib.sha256()
+    for line in r.iter_lines():
+        sig.update(line)
+    digest = sig.hexdigest()
+    fp = os.path.join(tempfile.gettempdir(), hashlib.sha256(digest.encode('utf-8')).hexdigest())
+    if os.path.isfile(fp) and os.stat(fp).st_size > 0:
+        print("reading data")
+        with open(fp, 'rb') as f:
+            dat = f.read()
+    else:
+        print("writing data")
+        with requests.get(url) as response:
+            response.raise_for_status()
+            dat = response.content
+        with open(f"{fp}.tmp", 'wb') as f:
+            f.write(dat)
+        os.rename(f"{fp}.tmp", fp)
     return dat
 
 def get_diff(arr):
