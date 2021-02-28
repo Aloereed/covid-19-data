@@ -1,7 +1,7 @@
 def mk_dir(*der):
     import os
     for d in der:
-        if os.path.isdir(d) != True:
+        if not os.path.isdir(d):
             print(f"creating '{d}'")
             os.mkdir(d)
 
