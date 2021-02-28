@@ -42,3 +42,8 @@ def write_readme(template, date, df_24, df_avg):
     with open('README.md', 'w') as f:
         print(f"writing to '{os.path.join(os.getcwd(), 'README.md')}'")
         f.write(template.format(date, df_24, df_avg))
+
+def git_push():
+    import os
+    print("pushing to github")
+    os.system('git add . && git commit -m "Updating data." && git push')
