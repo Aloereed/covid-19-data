@@ -3,14 +3,12 @@ from ops import *
 import pandas as pd
 import io
 import numpy as np
-import os
 import matplotlib.pyplot as plt
+from README_TEMPLATE import README_TEMPLATE
+import os
 
 # create directories if they dont exist
-der = ('data', 'plots')
-for d in der:
-    if os.path.isdir(d) != True:
-        os.mkdir(d)
+mk_dir('data', 'plots')
 
 # **** build data ****
 
@@ -89,7 +87,7 @@ plt.plot(x, y, color='b')
 plt.savefig('plots/US_New_COVID-19_Deaths.png')
 
 # **** write to README.md ****
-print(f"writing to 'README.md'")
+
 # new cases and deaths in the last 24 hours
 cases = new_cases[-1]
 deaths = new_deaths[-1]
@@ -110,22 +108,7 @@ df_avg = pd.DataFrame({'Cases': [f'{int(cmean):,d}'], 'Deaths': [f'{int(dmean):,
 df_avg = df_avg.to_markdown(index=False, disable_numparse=True)
 
 # write to 'README.md'
-with open('README.md', 'w') as f:
-    f.write(f'''# US COVID-19 [Data](https://github.com/drebrb/covid-19-data/blob/master/data/us_covid-19_data.csv)
-###### Reported numbers for {str(date)} 
-{df_24}
-###### 7-day average 
-{df_avg}
-## [Total Cases and Deaths](https://github.com/drebrb/covid-19-data/blob/master/data/us_covid-19_total.csv)
-### Cases
-![Plot](https://github.com/drebrb/covid-19-data/blob/master/plots/US_Total_COVID-19_Cases.png)
-### Deaths
-![Plot](https://github.com/drebrb/covid-19-data/blob/master/plots/US_Total_COVID-19_Deaths.png)
-## [New Cases and Deaths](https://github.com/drebrb/covid-19-data/blob/master/data/us_covid-19_new.csv) 
-### Cases
-![Plot](https://github.com/drebrb/covid-19-data/blob/master/plots/US_New_COVID-19_Cases.png)
-### Deaths
-![Plot](https://github.com/drebrb/covid-19-data/blob/master/plots/US_New_COVID-19_Deaths.png)''')
+write_readme(README_TEMPLATE(), date, df_24, df_avg)
 
 # **** push to github ****
 print("pushing to github")
