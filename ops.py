@@ -34,8 +34,8 @@ def get_diff(arr):
     import numpy as np
     arr = np.asarray(arr)
     diff = np.diff(arr)
-    diff = np.insert(diff, 0, arr[0])
-    return diff
+    arr = np.insert(diff, 0, arr[0])
+    return arr
 
 def write_readme(template, date, df_24, df_avg):
     with open('README.md', 'w') as f:
