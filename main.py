@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-from ops import *
+from ops import mk_dir, fetch, get_diff, write_readme
 import pandas as pd
 import io
 import numpy as np
