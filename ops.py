@@ -7,10 +7,11 @@ def mk_dir(*der):
 
 def fetch(url):
     import requests, hashlib, os, tempfile
-    print("comparing hashes")
+    print(f"fetching '{url}'")
     with requests.get(url, stream=True) as response:
         response.raise_for_status()
         r = response
+    print("comparing hashes")
     sig = hashlib.sha256()
     for line in r.iter_lines():
         sig.update(line)
@@ -21,10 +22,10 @@ def fetch(url):
         with open(fp, 'rb') as f:
             dat = f.read()
     else:
-        print(f"writing to '{tempfile.gettempdir()}'")
         with requests.get(url) as response:
             response.raise_for_status()
             dat = response.content
+        print(f"writing to '{tempfile.gettempdir()}'")
         with open(f"{fp}.tmp", 'wb') as f:
             f.write(dat)
         os.rename(f"{fp}.tmp", fp)
@@ -39,11 +40,12 @@ def get_diff(arr):
 
 def write_readme(template, date, df_24, df_avg):
     import os
+    print(f"writing to '{os.path.join(os.getcwd(), 'README.md')}'")
     with open('README.md', 'w') as f:
-        print(f"writing to '{os.path.join(os.getcwd(), 'README.md')}'")
         f.write(template.format(date, df_24, df_avg))
 
 def git_push():
     import os
-    print("pushing to github")
-    os.system('git add . && git commit -m "Updating data." && git push')
+    if os.path.isdir('.git'):
+        print("pushing to github")
+        os.system('git add . && git commit -m "Updating data." && git push')
