@@ -27,6 +27,7 @@ new_deaths = get_diff(total_deaths)
 
 # **** create csv's ****
 print(f"writing to '{os.path.join(os.getcwd(), 'data')}'")
+
 # create csv for total cases and deaths
 df = pd.DataFrame({'date': dates, 'total cases': total_cases,
     'total deaths': total_deaths})
@@ -44,6 +45,7 @@ df.to_csv('data/us_covid-19_data.csv', index=False)
 
 # **** plot data ****
 print(f"writing to '{os.path.join(os.getcwd(), 'plots')}'")
+
 # x axis for all plots
 x = dates
 
