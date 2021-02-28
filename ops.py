@@ -11,6 +11,7 @@ def fetch(url):
     with requests.get(url, stream=True) as response:
         response.raise_for_status()
         r = response
+        dat = r.content
     print("comparing hashes")
     sig = hashlib.sha256()
     for line in r.iter_lines():
@@ -22,9 +23,6 @@ def fetch(url):
         with open(fp, 'rb') as f:
             dat = f.read()
     else:
-        with requests.get(url) as response:
-            response.raise_for_status()
-            dat = response.content
         print(f"writing to '{tempfile.gettempdir()}'")
         with open(f"{fp}.tmp", 'wb') as f:
             f.write(dat)
