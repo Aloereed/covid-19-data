@@ -21,6 +21,7 @@ def fetch(url):
 
 def get_diff(arr):
     import numpy as np
+    arr = np.asarray(arr)
     diff = np.diff(arr)
     diff = np.insert(diff, 0, arr[0])
     return diff

@@ -18,8 +18,8 @@ df = pd.read_csv(io.StringIO(dat.decode('utf-8')))
 
 # arrays
 dates = np.array(df['date'], dtype='datetime64')
-total_cases = np.array(df['cases'])
-total_deaths = np.array(df['deaths'])
+total_cases = np.array(df['cases'], dtype='int64')
+total_deaths = np.array(df['deaths'], dtype='int64')
 
 # calculate new cases and deaths
 new_cases = get_diff(total_cases)
