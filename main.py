@@ -25,6 +25,7 @@ total_deaths = np.array(df['deaths'], dtype='int64')
 new_cases = get_diff(total_cases)
 new_deaths = get_diff(total_deaths)
 
+# **** create csv's ****
 print(f"writing to '{os.path.join(os.getcwd(), 'data')}'")
 # create csv for total cases and deaths
 df = pd.DataFrame({'date': dates, 'total cases': total_cases,
