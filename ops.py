@@ -23,7 +23,7 @@ def fetch(url):
         with open(fp, 'rb') as f:
             dat = f.read()
     else:
-        print(f"writing to '{tempfile.gettempdir()}'")
+        print(f"writing to '{os.path.join(tempfile.gettempdir(), fp)}'")
         with open(f"{fp}.tmp", 'wb') as f:
             f.write(dat)
         os.rename(f"{fp}.tmp", fp)
