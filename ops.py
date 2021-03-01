@@ -31,7 +31,7 @@ def fetch(url):
             with open(f"{fp}.tmp", 'wb') as f:
                 f.write(dat)
             os.rename(f"{fp}.tmp", fp)
-            return dat
+        return dat
 
 def get_diff(arr):
     import numpy as np
