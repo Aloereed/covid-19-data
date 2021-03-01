@@ -50,4 +50,4 @@ def git_push():
     import os
     if os.path.isdir('.git'):
         print("pushing to github")
-        os.system('git add . && git commit -m "Updating data." && git push')
+        os.system('git pull && git add . && git commit -m "Updating data." && git push')
