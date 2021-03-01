@@ -13,11 +13,10 @@ def fetch(url):
         print(f"fetching '{url}'")
         with requests.get(url, stream=True) as response:
             response.raise_for_status()
-            r = response
-            dat = r.content
+            dat = response.content
         print("comparing hashes")
         sig = hashlib.sha256()
-        for line in r.iter_lines():
+        for line in response.iter_lines():
             sig.update(line)
         digest = sig.hexdigest()
         fp = os.path.join(tempfile.gettempdir(), hashlib.sha256(digest.encode('utf-8')).hexdigest())
