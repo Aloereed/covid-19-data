@@ -7,26 +7,31 @@ def mk_dir(*dirs):
 
 def fetch(url):
     import requests, hashlib, os, tempfile
-    print(f"fetching '{url}'")
-    with requests.get(url, stream=True) as response:
-        response.raise_for_status()
-        r = response
-        dat = r.content
-    print("comparing hashes")
-    sig = hashlib.sha256()
-    for line in r.iter_lines():
-        sig.update(line)
-    digest = sig.hexdigest()
-    fp = os.path.join(tempfile.gettempdir(), hashlib.sha256(digest.encode('utf-8')).hexdigest())
-    if os.path.isfile(fp) and os.stat(fp).st_size > 0:
-        print("no update available")
-        exit(1)
-    else:
-        print(f"writing to '{fp}'")
-        with open(f"{fp}.tmp", 'wb') as f:
-            f.write(dat)
-        os.rename(f"{fp}.tmp", fp)
-    return dat
+    from time import sleep
+    from tqdm import trange
+    while True:
+        print(f"fetching '{url}'")
+        with requests.get(url, stream=True) as response:
+            response.raise_for_status()
+            r = response
+            dat = r.content
+        print("comparing hashes")
+        sig = hashlib.sha256()
+        for line in r.iter_lines():
+            sig.update(line)
+        digest = sig.hexdigest()
+        fp = os.path.join(tempfile.gettempdir(), hashlib.sha256(digest.encode('utf-8')).hexdigest())
+        if os.path.isfile(fp) and os.stat(fp).st_size > 0:
+            print("no update available")
+            print("timeout 1hr")
+            for i in trange(3600):
+                sleep(1)
+        else:
+            print(f"writing to '{fp}'")
+            with open(f"{fp}.tmp", 'wb') as f:
+                f.write(dat)
+            os.rename(f"{fp}.tmp", fp)
+            return dat
 
 def get_diff(arr):
     import numpy as np
