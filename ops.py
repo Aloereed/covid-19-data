@@ -23,7 +23,6 @@ def fetch(url):
         fp = os.path.join(tempfile.gettempdir(), hashlib.sha256(digest.encode('utf-8')).hexdigest())
         if os.path.isfile(fp) and os.stat(fp).st_size > 0:
             print("no update available")
-            print("timeout 1hr")
             for i in trange(3600):
                 sleep(1)
         else:
