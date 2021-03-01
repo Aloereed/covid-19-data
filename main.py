@@ -6,6 +6,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 from README_TEMPLATE import README_TEMPLATE
 import os
+from tqdm import trange
+from time import sleep
 
 # create directories if they dont exist
 mk_dir('data', 'plots')
