@@ -5,10 +5,11 @@ def mk_dir(*dirs):
             print(f"creating '{os.path.join(os.getcwd(), d)}'")
             os.mkdir(d)
 
-def fetch(url):
+def fetch(url, start_time):
     import requests, hashlib, os, tempfile
     from time import sleep
     from tqdm import trange
+    from timeit import default_timer as timer
     while True:
         print(f"fetching '{url}'")
         with requests.get(url, stream=True) as response:
@@ -24,12 +25,14 @@ def fetch(url):
             print("no update available")
             for i in trange(3600, ncols=80):
                 sleep(1)
+            update_time = timer()
+            print(f'uptime: {update_time - start_time}')
         else:
             print(f"writing to '{fp}'")
             with open(f"{fp}.tmp", 'wb') as f:
                 f.write(dat)
             os.rename(f"{fp}.tmp", fp)
-        return dat
+            return dat
 
 def get_diff(arr):
     import numpy as np

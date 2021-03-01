@@ -8,16 +8,19 @@ from README_TEMPLATE import README_TEMPLATE
 import os
 from tqdm import trange
 from time import sleep
+from timeit import default_timer as timer
+
+start_time = timer()
 
 # create directories if they dont exist
 mk_dir('data', 'plots')
-
+ 
 while True:
 
     # **** build data ****
 
     # fetch data
-    dat = fetch('https://raw.githubusercontent.com/nytimes/covid-19-data/master/us.csv')
+    dat = fetch('https://raw.githubusercontent.com/nytimes/covid-19-data/master/us.csv', start_time)
     df = pd.read_csv(io.StringIO(dat.decode('utf-8')))
 
     # arrays
@@ -123,3 +126,6 @@ while True:
     # **** timeout ****
     for i in trange(3600, ncols=80):
         sleep(1)
+
+    update_time = timer()
+    print(f'uptime: {update_time - start_time}')
