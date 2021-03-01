@@ -117,3 +117,7 @@ while True:
 
 # **** push to github ****
     git_push()
+
+# **** timeout ****
+    for i in trange(3600):
+        sleep(1)
