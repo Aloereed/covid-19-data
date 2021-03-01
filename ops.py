@@ -19,9 +19,8 @@ def fetch(url):
     digest = sig.hexdigest()
     fp = os.path.join(tempfile.gettempdir(), hashlib.sha256(digest.encode('utf-8')).hexdigest())
     if os.path.isfile(fp) and os.stat(fp).st_size > 0:
-        print(f"reading '{fp}'")
-        with open(fp, 'rb') as f:
-            dat = f.read()
+        print("no update available")
+        exit(1)
     else:
         print(f"writing to '{fp}'")
         with open(f"{fp}.tmp", 'wb') as f:
