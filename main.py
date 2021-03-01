@@ -121,5 +121,5 @@ while True:
     git_push()
 
     # **** timeout ****
-    for i in trange(3600):
+    for i in trange(3600, ncols=80):
         sleep(1)
