@@ -1,7 +1,6 @@
-matplotlib
-numpy
-# ops
 pandas
-# README_TEMPLATE
-requests
+matplotlib
+tqdm
 tabulate
+# ops.py
+# README_TEMPLATE.py
