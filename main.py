@@ -48,13 +48,13 @@ while True:
  
     # time between updates
     def timeout():
-        timeout = trange(3600, ncols=80)
+        timeout = trange(3600, ncols=80, leave=False)
         for t in timeout:
-            timeout.set_description(uptime())
+            timeout.set_description(uptime(st))
             sleep(1)
 
     # total time program has been online
-    def uptime(): 
+    def uptime(st): 
         et = time.time() - st
         t = time.gmtime(et)
         d = t.tm_mday - 1
