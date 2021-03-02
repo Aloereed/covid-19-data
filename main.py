@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 import time
+from tqdm import trange
 from time import sleep
 import os, requests, hashlib, tempfile, io
-from tqdm import trange
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
