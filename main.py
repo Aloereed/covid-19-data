@@ -11,6 +11,7 @@ from time import sleep
 
 # start timer
 start_time = np.datetime64('now')
+i = 0 
 
 # create directories if they dont exist
 mk_dir('data', 'plots')
@@ -123,12 +124,23 @@ while True:
     git_push()
 
     # **** timeout ****
-    first = np.datetime64('now')
-    delta = np.timedelta64(10, 's')
-    last = first + delta
-    times = np.arange(first, last)
-    times = np.array(times)
-    times = tqdm(times, ncols=80)
-    for time in times:
-        times.set_description(f"{time}")
+    time = tqdm(3600, ncols=80)
+    for t in time:
+        n = np.datetime64('now')
+        S = (n - start_time).astype('int64')
+        s = S
+        if s > 60:
+            s = s // 60 + i
+            i += 1
+        if i > 60:
+            i = 0
+        m = S // 60
+        h = m // 60
+        d = h // 24
+        s = str(s).zfill(2)
+        m = str(m).zfill(2)
+        h = str(h).zfill(2)
+        d = str(d).zfill(2)
+        uptime = f"uptime: {d} {h}:{m}:{s}"
+        time.set_description(f"{uptime}")
         sleep(1)

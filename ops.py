@@ -10,7 +10,6 @@ def fetch(url, start_time):
     from time import sleep
     import numpy as np
     from tqdm import tqdm
-    i = 0 
     while True:
         print(f"fetching '{url}'")
         with requests.get(url, stream=True) as response:
@@ -24,7 +23,7 @@ def fetch(url, start_time):
         fp = os.path.join(tempfile.gettempdir(), hashlib.sha256(digest.encode('utf-8')).hexdigest())
         if os.path.isfile(fp) and os.stat(fp).st_size > 0:
             print("no update available")
-            delta = np.timedelta64(10, 's')
+            delta = np.timedelta64(1, 'h')
             last = start_time + delta
             time = np.arange(start_time, last)
             time = np.array(time)
