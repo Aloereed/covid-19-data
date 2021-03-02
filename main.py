@@ -55,12 +55,16 @@ while True:
 
     # total time program has been online
     def uptime(st): 
-        et = time.time() - st
-        t = time.gmtime(et)
-        d = t.tm_mday - 1
-        h = t.tm_hour
-        m = t.tm_min
-        s = t.tm_sec
+        ct = time.time()
+        et = ct - st
+        d = (et // 86400) % 365
+        h = (et // 3600) % 24
+        m = (et // 60) % 60
+        s = et % 60
+        d = int(d) 
+        h = int(h)
+        m = int(m)
+        s = int(s)
         d = str(d).zfill(3)
         h = str(h).zfill(2)
         m = str(m).zfill(2)
