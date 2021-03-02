@@ -1,34 +1,86 @@
 #!/usr/bin/env python3
-from ops import mk_dir, fetch, get_diff, write_readme, git_push
+import time
+from time import sleep
+import os, requests, hashlib, tempfile, io
+from tqdm import trange
 import pandas as pd
-import io
 import numpy as np
 import matplotlib.pyplot as plt
 from README_TEMPLATE import README_TEMPLATE
-import os
-from tqdm import trange
-from time import sleep
 
 # start timer
-start_time = np.datetime64('now')
-i = 0 
+st = time.time()
 
 # create directories if they dont exist
+def mk_dir(*dirs):
+    for d in dirs:
+        if not os.path.isdir(d):
+            print(f"creating '{os.path.join(os.getcwd(), d)}'")
+            os.mkdir(d)
+
 mk_dir('data', 'plots')
- 
+
 while True:
+    def uptime():                              
+        et = time.time() - st
+        t = time.gmtime(et)
+        d = t.tm_mday - 1
+        h = t.tm_hour
+        m = t.tm_min
+        s = t.tm_sec
+        d = str(d).zfill(3)
+        h = str(h).zfill(2)
+        m = str(m).zfill(2)
+        s = str(s).zfill(2)
+        uptime = f"uptime: {d} {h}:{m}:{s}"
+        return uptime
+
+    def timeout():
+        timeout = trange(3600, ncols=80)
+        for t in timeout:
+            timeout.set_description(uptime())
+            sleep(1)
+
+    def fetch(url):
+        while True:
+            print(f"fetching '{url}'")
+            with requests.get(url, stream=True) as response:
+                response.raise_for_status()
+                dat = response.content
+            print("comparing hashes")
+            sig = hashlib.md5()
+            for line in response.iter_lines():
+                sig.update(line)
+            digest = sig.hexdigest()
+            fp = os.path.join(tempfile.gettempdir(), hashlib.md5(digest.encode('utf-8')).hexdigest())
+            if os.path.isfile(fp) and os.stat(fp).st_size > 0:
+                print("no update available")
+                timeout()
+            else:
+                print(f"writing to '{fp}'")
+                with open(f"{fp}.tmp", 'wb') as f:
+                    f.write(dat)
+                os.rename(f"{fp}.tmp", fp)
+                return dat
+ 
     # **** build data ****
-
+    
     # fetch data
-    dat = fetch('https://raw.githubusercontent.com/nytimes/covid-19-data/master/us.csv', start_time, i)
+    dat = fetch('https://raw.githubusercontent.com/nytimes/covid-19-data/master/us.csv')
     df = pd.read_csv(io.StringIO(dat.decode('utf-8')))
-
+   
     # arrays
     dates = np.array(df['date'], dtype='datetime64')
     total_cases = np.array(df['cases'], dtype='int64')
     total_deaths = np.array(df['deaths'], dtype='int64')
 
     # calculate new cases and deaths
+    def get_diff(arr):
+        arr = np.asarray(arr)
+        diff = np.diff(arr)
+        arr = np.insert(diff, 0, arr[0])
+        return arr
+
     new_cases = get_diff(total_cases)
     new_deaths = get_diff(total_deaths)
 
@@ -118,29 +170,19 @@ while True:
     df_avg = df_avg.to_markdown(index=False, disable_numparse=True)
 
     # write to 'README.md'
+    def write_readme(template, date, df_24, df_avg):
+        print(f"writing to '{os.path.join(os.getcwd(), 'README.md')}'")
+        with open('README.md', 'w') as f:
+            f.write(template.format(date, df_24, df_avg))
+
     write_readme(README_TEMPLATE(), date, df_24, df_avg)
 
     # **** push to github ****
+    def git_push():
+        if os.path.isdir('.git'):
+            os.system('git pull && git add . && git commit -m "Updating data." && git push')
+    
     git_push()
-
+    
     # **** timeout ****
-    time = trange(3600, ncols=80)
-    for t in time:
-        n = np.datetime64('now')
-        S = (n - start_time).astype('int64')
-        s = S
-        if s > 60:
-            s = s // 60 + i
-            i += 1
-        if i > 60:
-            i = 0
-        m = S // 60
-        h = m // 60
-        d = h // 24
-        s = str(s).zfill(2)
-        m = str(m).zfill(2)
-        h = str(h).zfill(2)
-        d = str(d).zfill(3)
-        uptime = f"uptime: {d} {h}:{m}:{s}"
-        time.set_description(f"{uptime}")
-        sleep(1)
+    timeout()
