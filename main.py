@@ -23,6 +23,7 @@ mk_dir('data', 'plots')
 # **** build data ****
 
 while True:
+    # fetch and update data
     def fetch(url): 
         while True:
             print(f"fetching '{url}'")
@@ -44,13 +45,15 @@ while True:
                     f.write(dat)
                 os.rename(f"{fp}.tmp", fp)
             return dat
-
+ 
+    # time between updates
     def timeout():
         timeout = trange(3600, ncols=80)
         for t in timeout:
             timeout.set_description(uptime())
             sleep(1)
 
+    # total time program has been online
     def uptime(): 
         et = time.time() - st
         t = time.gmtime(et)
