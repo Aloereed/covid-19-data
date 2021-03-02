@@ -20,28 +20,10 @@ def mk_dir(*dirs):
 
 mk_dir('data', 'plots')
 
+# **** build data ****
+
 while True:
-    def uptime():                              
-        et = time.time() - st
-        t = time.gmtime(et)
-        d = t.tm_mday - 1
-        h = t.tm_hour
-        m = t.tm_min
-        s = t.tm_sec
-        d = str(d).zfill(3)
-        h = str(h).zfill(2)
-        m = str(m).zfill(2)
-        s = str(s).zfill(2)
-        uptime = f"uptime: {d} {h}:{m}:{s}"
-        return uptime
-
-    def timeout():
-        timeout = trange(3600, ncols=80)
-        for t in timeout:
-            timeout.set_description(uptime())
-            sleep(1)
-
-    def fetch(url):
+    def fetch(url): 
         while True:
             print(f"fetching '{url}'")
             with requests.get(url, stream=True) as response:
@@ -61,10 +43,28 @@ while True:
                 with open(f"{fp}.tmp", 'wb') as f:
                     f.write(dat)
                 os.rename(f"{fp}.tmp", fp)
-                return dat
+            return dat
+
+    def timeout():
+        timeout = trange(3600, ncols=80)
+        for t in timeout:
+            timeout.set_description(uptime())
+            sleep(1)
+
+    def uptime(): 
+        et = time.time() - st
+        t = time.gmtime(et)
+        d = t.tm_mday - 1
+        h = t.tm_hour
+        m = t.tm_min
+        s = t.tm_sec
+        d = str(d).zfill(3)
+        h = str(h).zfill(2)
+        m = str(m).zfill(2)
+        s = str(s).zfill(2)
+        uptime = f"uptime: {d} {h}:{m}:{s}"
+        return uptime
  
-    # **** build data ****
-    
     # fetch data
     dat = fetch('https://raw.githubusercontent.com/nytimes/covid-19-data/master/us.csv')
     df = pd.read_csv(io.StringIO(dat.decode('utf-8')))
@@ -180,7 +180,6 @@ while True:
     # **** push to github ****
     if os.path.isdir('.git'):
         os.system('git add . && git commit -m "Updating data." && git push')
-    
     
     # **** timeout ****
     timeout()
