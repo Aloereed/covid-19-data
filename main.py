@@ -44,7 +44,7 @@ while True:
                 with open(f"{fp}.tmp", 'wb') as f:
                     f.write(dat)
                 os.rename(f"{fp}.tmp", fp)
-            return dat
+                return dat
  
     # time between updates
     def timeout():
