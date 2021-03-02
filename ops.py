@@ -9,6 +9,7 @@ def fetch(url, start_time):
     import requests, hashlib, os, tempfile
     from time import sleep
     import numpy as np
+    from tqdm import tqdm
     i = 0 
     while True:
         print(f"fetching '{url}'")
