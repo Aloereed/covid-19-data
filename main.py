@@ -6,7 +6,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from README_TEMPLATE import README_TEMPLATE
 import os
-from tqdm import tqdm
+from tqdm import trange
 from time import sleep
 
 # start timer
@@ -20,7 +20,7 @@ while True:
     # **** build data ****
 
     # fetch data
-    dat = fetch('https://raw.githubusercontent.com/nytimes/covid-19-data/master/us.csv', start_time)
+    dat = fetch('https://raw.githubusercontent.com/nytimes/covid-19-data/master/us.csv', start_time, i)
     df = pd.read_csv(io.StringIO(dat.decode('utf-8')))
 
     # arrays
@@ -124,7 +124,7 @@ while True:
     git_push()
 
     # **** timeout ****
-    time = tqdm(3600, ncols=80)
+    time = trange(3600, ncols=80)
     for t in time:
         n = np.datetime64('now')
         S = (n - start_time).astype('int64')
