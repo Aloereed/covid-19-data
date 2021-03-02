@@ -9,8 +9,11 @@ def fetch(url, start_time):
     import requests, hashlib, os, tempfile
     from time import sleep
     from tqdm import trange
-    from timeit import default_timer as timer
+    import datetime
     while True:
+        update_time = datetime.datetime.now()
+        uptime = update_time - start_time
+        print(f"uptime: {uptime}")
         print(f"fetching '{url}'")
         with requests.get(url, stream=True) as response:
             response.raise_for_status()
@@ -25,8 +28,6 @@ def fetch(url, start_time):
             print("no update available")
             for i in trange(3600, ncols=80):
                 sleep(1)
-            update_time = timer()
-            print(f'uptime: {update_time - start_time}')
         else:
             print(f"writing to '{fp}'")
             with open(f"{fp}.tmp", 'wb') as f:
