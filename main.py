@@ -6,12 +6,11 @@ import numpy as np
 import matplotlib.pyplot as plt
 from README_TEMPLATE import README_TEMPLATE
 import os
-from tqdm import trange
+from tqdm import tqdm
 from time import sleep
-import datetime
 
 # start timer
-start_time = datetime.datetime.now()
+start_time = np.datetime64('now')
 
 # create directories if they dont exist
 mk_dir('data', 'plots')
@@ -124,5 +123,12 @@ while True:
     git_push()
 
     # **** timeout ****
-    for i in trange(3600, ncols=80):
+    first = np.datetime64('now')
+    delta = np.timedelta64(1, 'h')
+    last = first + delta
+    times = np.arange(first, last)
+    times = np.array(times)
+    times = tqdm(times, ncols=80)
+    for time in times:
+        times.set_description(f"{time}")
         sleep(1)

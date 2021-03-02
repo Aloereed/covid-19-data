@@ -8,10 +8,10 @@ def mk_dir(*dirs):
 def fetch(url, start_time):
     import requests, hashlib, os, tempfile
     from time import sleep
-    from tqdm import trange
-    import datetime
+    from tqdm import tqdm
+    import numpy as np
     while True:
-        update_time = datetime.datetime.now()
+        update_time = np.datetime64('now')
         uptime = update_time - start_time
         print(f"uptime: {uptime}")
         print(f"fetching '{url}'")
@@ -26,7 +26,14 @@ def fetch(url, start_time):
         fp = os.path.join(tempfile.gettempdir(), hashlib.sha256(digest.encode('utf-8')).hexdigest())
         if os.path.isfile(fp) and os.stat(fp).st_size > 0:
             print("no update available")
-            for i in trange(3600, ncols=80):
+            first = np.datetime64('now')
+            delta = np.timedelta64(1, 'h')
+            last = first + delta
+            times = np.arange(first, last)
+            times = np.array(times)
+            times = tqdm(times, ncols=80)
+            for time in times:
+                times.set_description(f"{time}")
                 sleep(1)
         else:
             print(f"writing to '{fp}'")
