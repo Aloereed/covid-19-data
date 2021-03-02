@@ -140,7 +140,7 @@ while True:
         s = str(s).zfill(2)
         m = str(m).zfill(2)
         h = str(h).zfill(2)
-        d = str(d).zfill(2)
+        d = str(d).zfill(3)
         uptime = f"uptime: {d} {h}:{m}:{s}"
         time.set_description(f"{uptime}")
         sleep(1)
