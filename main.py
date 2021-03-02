@@ -8,7 +8,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from README_TEMPLATE import README_TEMPLATE
 
-# start timer
+# start time
 st = time.time()
 
 # create directories if they dont exist
