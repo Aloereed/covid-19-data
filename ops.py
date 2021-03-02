@@ -5,12 +5,15 @@ def mk_dir(*dirs):
             print(f"creating '{os.path.join(os.getcwd(), d)}'")
             os.mkdir(d)
 
-def timeout():
+def timeout(first, i):
+    import numpy as np
+    from tqdm import tqdm
+    from time import sleep
     delta = np.timedelta64(10, 's')
     last = first + delta
     time = np.arange(first, last)
-    time = np.array(times)
-    time = tqdm(times, ncols=80)
+    time = np.array(time)
+    time = tqdm(time, ncols=80)
     for t in time:
         n = np.datetime64('now')
         S = (n - first).astype('int64')
@@ -28,18 +31,15 @@ def timeout():
         h = str(h).zfill(2)
         d = str(d).zfill(2)
         uptime = f"uptime: {d} {h}:{m}:{s}"
-        times.set_description(f"{uptime}")
+        time.set_description(f"{uptime}")
         sleep(1)
 
 def fetch(url, start_time):
     import requests, hashlib, os, tempfile
     from time import sleep
-    from tqdm import tqdm
     import numpy as np
+    i = 0 
     while True:
-        update_time = np.datetime64('now')
-        uptime = update_time - start_time
-        print(f"uptime: {uptime}")
         print(f"fetching '{url}'")
         with requests.get(url, stream=True) as response:
             response.raise_for_status()
@@ -52,7 +52,7 @@ def fetch(url, start_time):
         fp = os.path.join(tempfile.gettempdir(), hashlib.sha256(digest.encode('utf-8')).hexdigest())
         if os.path.isfile(fp) and os.stat(fp).st_size > 0:
             print("no update available")
-            timeout()
+            timeout(start_time, i)
         else:
             print(f"writing to '{fp}'")
             with open(f"{fp}.tmp", 'wb') as f:

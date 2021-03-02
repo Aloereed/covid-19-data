@@ -124,7 +124,7 @@ while True:
 
     # **** timeout ****
     first = np.datetime64('now')
-    delta = np.timedelta64(1, 'h')
+    delta = np.timedelta64(10, 's')
     last = first + delta
     times = np.arange(first, last)
     times = np.array(times)
