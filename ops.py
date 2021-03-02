@@ -24,8 +24,8 @@ def fetch(url, start_time):
         if os.path.isfile(fp) and os.stat(fp).st_size > 0:
             print("no update available")
             delta = np.timedelta64(10, 's')
-            last = first + delta
-            time = np.arange(first, last)
+            last = start_time + delta
+            time = np.arange(start_time, last)
             time = np.array(time)
             time = tqdm(time, ncols=80)
             for t in time:
