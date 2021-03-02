@@ -178,11 +178,9 @@ while True:
     write_readme(README_TEMPLATE(), date, df_24, df_avg)
 
     # **** push to github ****
-    def git_push():
-        if os.path.isdir('.git'):
-            os.system('git pull && git add . && git commit -m "Updating data." && git push')
+    if os.path.isdir('.git'):
+        os.system('git add . && git commit -m "Updating data." && git push')
     
-    git_push()
     
     # **** timeout ****
     timeout()
