@@ -7,6 +7,7 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 from README_TEMPLATE import README_TEMPLATE
+from subprocess import check_call
 
 # start time
 st = time.time()
@@ -25,6 +26,7 @@ mk_dir('data', 'plots')
 while True:
     # fetch and update data
     def fetch(url): 
+        mx = 10
         while True:
             try:
                 print(f"fetching '{url}'")
@@ -46,13 +48,18 @@ while True:
                         f.write(dat)
                     os.rename(f"{fp}.tmp", fp)
                     return dat
-            except:
-                print(f"failed to fetch '{url}'")
-                timeout(3)
+            except Exception as error:
+                if mx > 0:
+                    print(f"\n{error}\n")
+                    timeout(6)
+                    mx -= 1
+                else:
+                    print("\nmax retries exceeded")
+                    exit(1)
 
-    # time between updates
+    # time between fetches
     def timeout(sec):
-        timeout = trange(sec, ncols=80, leave=False)
+        timeout = trange(sec, ncols=103, leave=False, ascii=' #')
         for t in timeout:
             timeout.set_description(uptime(st))
             sleep(1)
@@ -78,9 +85,9 @@ while True:
  
     # fetch data
     dat = fetch('https://raw.githubusercontent.com/nytimes/covid-19-data/master/us.csv')
-    df = pd.read_csv(io.StringIO(dat.decode('utf-8')))
    
-    # arrays
+    # parse data into arrays
+    df = pd.read_csv(io.StringIO(dat.decode('utf-8')))
     dates = np.array(df['date'], dtype='datetime64')
     total_cases = np.array(df['cases'], dtype='int64')
     total_deaths = np.array(df['deaths'], dtype='int64')
@@ -190,13 +197,21 @@ while True:
 
     # **** push to github ****
     if os.path.isdir('.git'):
+        mx = 10
+        check_call('/usr/bin/git add .', shell=True)
+        check_call('/usr/bin/git commit -m "Updating data."', shell=True)
         while True:
             try:
-                os.system('git add . && git commit -m "Updating data." && git push')
+                check_call('/usr/bin/git push', shell=True)
                 break
-            except:
-                print("failed to push to github")
-                timeout(3)
+            except Exception as error:
+                if mx > 0:
+                    print(f"\n{error}\n")
+                    timeout(6)
+                    mx -= 1
+                else:
+                    print("\nmax retries exceeded")
+                    exit(1)
 
     # **** timeout ****
     timeout(3600)
