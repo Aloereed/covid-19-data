@@ -189,12 +189,14 @@ while True:
     write_readme(README_TEMPLATE(), date, df_24, df_avg)
 
     # **** push to github ****
-    try:
-        if os.path.isdir('.git'):
-            os.system('git add . && git commit -m "Updating data." && git push')
-    except:
-        print("failed to push to github")
-        timeout(3)
+    if os.path.isdir('.git'):
+        while True:
+            try:
+                os.system('git add . && git commit -m "Updating data." && git push')
+                break
+            except:
+                print("failed to push to github")
+                timeout(3)
 
     # **** timeout ****
     timeout(3600)
