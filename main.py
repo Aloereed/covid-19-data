@@ -198,8 +198,11 @@ while True:
     # **** push to github ****
     if os.path.isdir('.git'):
         mx = 10
-        check_call('/usr/bin/git add .', shell=True)
-        check_call('/usr/bin/git commit -m "Updating data."', shell=True)
+        try:
+            check_call('/usr/bin/git add .', shell=True)
+            check_call('/usr/bin/git commit -m "Updating data."', shell=True)
+        except Exception as error:
+            print(error)
         while True:
             try:
                 check_call('/usr/bin/git push', shell=True)
