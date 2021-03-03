@@ -26,29 +26,33 @@ while True:
     # fetch and update data
     def fetch(url): 
         while True:
-            print(f"fetching '{url}'")
-            with requests.get(url, stream=True) as response:
-                response.raise_for_status()
-                dat = response.content
-            print("comparing hashes")
-            sig = hashlib.md5()
-            for line in response.iter_lines():
-                sig.update(line)
-            digest = sig.hexdigest()
-            fp = os.path.join(tempfile.gettempdir(), hashlib.md5(digest.encode('utf-8')).hexdigest())
-            if os.path.isfile(fp) and os.stat(fp).st_size > 0:
-                print("no update available")
-                timeout()
-            else:
-                print(f"writing to '{fp}'")
-                with open(f"{fp}.tmp", 'wb') as f:
-                    f.write(dat)
-                os.rename(f"{fp}.tmp", fp)
-                return dat
- 
+            try:
+                print(f"fetching '{url}'")
+                with requests.get(url, stream=True) as response:
+                    response.raise_for_status()
+                    dat = response.content
+                print("comparing hashes")
+                sig = hashlib.md5()
+                for line in response.iter_lines():
+                    sig.update(line)
+                digest = sig.hexdigest()
+                fp = os.path.join(tempfile.gettempdir(), hashlib.md5(digest.encode('utf-8')).hexdigest())
+                if os.path.isfile(fp) and os.stat(fp).st_size > 0:
+                    print("no update available")
+                    timeout(3600)
+                else:
+                    print(f"writing to '{fp}'")
+                    with open(f"{fp}.tmp", 'wb') as f:
+                        f.write(dat)
+                    os.rename(f"{fp}.tmp", fp)
+                    return dat
+            except:
+                print(f"failed to fetch '{url}'")
+                timeout(3)
+
     # time between updates
-    def timeout():
-        timeout = trange(3600, ncols=80, leave=False)
+    def timeout(sec):
+        timeout = trange(sec, ncols=80, leave=False)
         for t in timeout:
             timeout.set_description(uptime(st))
             sleep(1)
@@ -185,8 +189,12 @@ while True:
     write_readme(README_TEMPLATE(), date, df_24, df_avg)
 
     # **** push to github ****
-    if os.path.isdir('.git'):
-        os.system('git add . && git commit -m "Updating data." && git push')
-    
+    try:
+        if os.path.isdir('.git'):
+            os.system('git add . && git commit -m "Updating data." && git push')
+    except:
+        print("failed to push to github")
+        timeout(3)
+
     # **** timeout ****
-    timeout()
+    timeout(3600)
