@@ -41,7 +41,7 @@ while True:
                 fp = os.path.join(tempfile.gettempdir(), hashlib.md5(digest.encode('utf-8')).hexdigest())
                 if os.path.isfile(fp) and os.stat(fp).st_size > 0:
                     print("no update available")
-                    timeout(3600)
+                    timeout(10)
                 else:
                     print(f"writing to '{fp}'")
                     with open(f"{fp}.tmp", 'wb') as f:
@@ -217,4 +217,4 @@ while True:
                     exit(1)
 
     # **** timeout ****
-    timeout(3600)
+    timeout(10)
