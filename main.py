@@ -22,7 +22,7 @@ def mk_dir(*dirs):
 mk_dir('data', 'plots')
 
 class Run:    # fetch and update data
-    def __init__(self, rt=6):
+    def __init__(self, rt=10):
         self.rt = rt
 
     def fetch(self, url): 
@@ -40,7 +40,7 @@ class Run:    # fetch and update data
                 fp = os.path.join(tempfile.gettempdir(), hashlib.md5(digest.encode('utf-8')).hexdigest())
                 if os.path.isfile(fp) and os.stat(fp).st_size > 0:
                     print("no update available")
-                    self.timeout(10)
+                    self.timeout(3600)
                 else:
                     print(f"writing to '{fp}'")
                     with open(f"{fp}.tmp", 'wb') as f:
