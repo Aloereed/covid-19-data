@@ -105,7 +105,7 @@ class Run:    # fetch and update data
                     check_call('/usr/bin/git push', shell=True)
                     break
                 except Exception as error:
-                    self.retry()
+                    self.retry(error)
 
 r = Run()
 
