@@ -21,12 +21,11 @@ def mk_dir(*dirs):
 
 mk_dir('data', 'plots')
 
-# **** build data ****
+class Run:    # fetch and update data
+    def __init__(self, rt=6):
+        self.rt = rt
 
-while True:
-    # fetch and update data
-    def fetch(url): 
-        mx = 10
+    def fetch(self, url): 
         while True:
             try:
                 print(f"fetching '{url}'")
@@ -41,7 +40,7 @@ while True:
                 fp = os.path.join(tempfile.gettempdir(), hashlib.md5(digest.encode('utf-8')).hexdigest())
                 if os.path.isfile(fp) and os.stat(fp).st_size > 0:
                     print("no update available")
-                    timeout(3600)
+                    self.timeout(10)
                 else:
                     print(f"writing to '{fp}'")
                     with open(f"{fp}.tmp", 'wb') as f:
@@ -49,23 +48,17 @@ while True:
                     os.rename(f"{fp}.tmp", fp)
                     return dat
             except Exception as error:
-                if mx > 0:
-                    print(f"\n{error}\n")
-                    timeout(6)
-                    mx -= 1
-                else:
-                    print("\nmax retries exceeded")
-                    exit(1)
+                self.retry(error) 
 
     # time between fetches
-    def timeout(sec):
+    def timeout(self, sec):
         timeout = trange(sec, ncols=103, leave=False, ascii=' #')
         for t in timeout:
-            timeout.set_description(uptime(st))
+            timeout.set_description(self.uptime())
             sleep(1)
 
     # total time program has been online
-    def uptime(st): 
+    def uptime(self): 
         ct = time.time()
         et = ct - st
         d = (et // 86400) % 365
@@ -82,11 +75,48 @@ while True:
         s = str(s).zfill(2)
         uptime = f"uptime: {d} {h}:{m}:{s}"
         return uptime
- 
-    # fetch data
-    dat = fetch('https://raw.githubusercontent.com/nytimes/covid-19-data/master/us.csv')
+
+    # retry if exception occured
+    def retry(self, error):
+        print(f"\n{error}\n")
+        self.rt -= 1
+        if self.rt > 0:
+            self.timeout(10)
+        else:
+            print("max retries exceeded")
+            exit(1)
+    
+    # update readme 
+    def write_readme(self, template, date, df_24, df_avg):
+        print(f"writing to '{os.path.join(os.getcwd(), 'README.md')}'")
+        with open('README.md', 'w') as f:
+            f.write(template.format(date, df_24, df_avg))
+
+    # update github repo
+    def push_git(self):
+        if os.path.isdir('.git'):
+            try:
+                check_call('/usr/bin/git add .', shell=True)
+                check_call('/usr/bin/git commit -m "Updating data."', shell=True)
+            except Exception as error:
+                print(f"\n{error}\n")
+            while True:
+                try:
+                    check_call('/usr/bin/git push', shell=True)
+                    break
+                except Exception as error:
+                    self.retry()
+
+r = Run()
+
+# **** build data ****
+
+while True:
+
+    # get data
+    dat = r.fetch('https://raw.githubusercontent.com/nytimes/covid-19-data/master/us.csv')
    
-    # parse data into arrays
+    # parse data and build arrays
     df = pd.read_csv(io.StringIO(dat.decode('utf-8')))
     dates = np.array(df['date'], dtype='datetime64')
     total_cases = np.array(df['cases'], dtype='int64')
@@ -188,33 +218,10 @@ while True:
     df_avg = df_avg.to_markdown(index=False, disable_numparse=True)
 
     # write to 'README.md'
-    def write_readme(template, date, df_24, df_avg):
-        print(f"writing to '{os.path.join(os.getcwd(), 'README.md')}'")
-        with open('README.md', 'w') as f:
-            f.write(template.format(date, df_24, df_avg))
-
-    write_readme(README_TEMPLATE(), date, df_24, df_avg)
+    r.write_readme(README_TEMPLATE(), date, df_24, df_avg)
 
     # **** push to github ****
-    if os.path.isdir('.git'):
-        mx = 10
-        try:
-            check_call('/usr/bin/git add .', shell=True)
-            check_call('/usr/bin/git commit -m "Updating data."', shell=True)
-        except Exception as error:
-            print(f"\n{error}\n")
-        while True:
-            try:
-                check_call('/usr/bin/git push', shell=True)
-                break
-            except Exception as error:
-                if mx > 0:
-                    print(f"\n{error}\n")
-                    timeout(6)
-                    mx -= 1
-                else:
-                    print("\nmax retries exceeded")
-                    exit(1)
+    r.push_git() 
 
     # **** timeout ****
-    timeout(3600)
+    r.timeout(3600)
