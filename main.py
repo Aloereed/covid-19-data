@@ -41,7 +41,7 @@ while True:
                 fp = os.path.join(tempfile.gettempdir(), hashlib.md5(digest.encode('utf-8')).hexdigest())
                 if os.path.isfile(fp) and os.stat(fp).st_size > 0:
                     print("no update available")
-                    timeout(10)
+                    timeout(3600)
                 else:
                     print(f"writing to '{fp}'")
                     with open(f"{fp}.tmp", 'wb') as f:
@@ -202,7 +202,7 @@ while True:
             check_call('/usr/bin/git add .', shell=True)
             check_call('/usr/bin/git commit -m "Updating data."', shell=True)
         except Exception as error:
-            print(error)
+            print(f"\n{error}\n")
         while True:
             try:
                 check_call('/usr/bin/git push', shell=True)
@@ -217,4 +217,4 @@ while True:
                     exit(1)
 
     # **** timeout ****
-    timeout(10)
+    timeout(3600)
