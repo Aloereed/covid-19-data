@@ -11,7 +11,7 @@ from subprocess import check_call
 st = time()
 
 def fetch(url): 
-    z = 1
+    acc = 0
     while True:
         try:
             print(f"fetching '{url}'")
@@ -27,7 +27,7 @@ def fetch(url):
             if os.path.isfile(fp) and os.stat(fp).st_size > 0:
                 print("no update available")
                 timeout(3600)
-                z //= z
+                acc = 0
             else:
                 print(f"writing to '{fp}'")
                 with open(f"{fp}.tmp", 'wb') as f:
@@ -35,8 +35,8 @@ def fetch(url):
                 os.rename(f"{fp}.tmp", fp)
                 return dat
         except Exception as error:
-            retry(z, error)
-            z += 1
+            acc += 1
+            retry(acc, error)
 
 def timeout(s):
     timeout = trange(s, ncols=103, leave=False, ascii=' #')
@@ -62,9 +62,9 @@ def uptime():
     uptime = f"uptime: {d} {h}:{m}:{s}"
     return uptime
 
-def retry(z, error):
-    print(f"\n{str(z).zfill(2)}/10: {error}\n")
-    if z < 10:
+def retry(acc, error):
+    print(f"\n{str(acc).zfill(2)}/10: {error}\n")
+    if acc < 10:
         timeout(6)
     else:
         print("max retries exceeded")
@@ -178,14 +178,14 @@ while True:
                 check_call('/usr/bin/git commit -m "Updating data."', shell=True)
             except Exception as error:
                 print(f"\n{error}\n")
-            z = 1
+            acc = 0
             while True:
                 try:
                     check_call('/usr/bin/git push', shell=True)
                     break
                 except Exception as error:
-                    retry(z, error)
-                    z += 1
+                    acc += 1
+                    retry(acc, error)
 
     push_git() 
 
