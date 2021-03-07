@@ -87,13 +87,13 @@ def get_diff(arr):
     return arr
 
 def write_us():
-    print(f"writing to 'us.csv'")
+    print(f"writing to '{os.path.join(os.getcwd(), 'us.csv')}'")
     df = pd.DataFrame({'date': dates, 'total cases': total_cases, 
         'total deaths': total_deaths, 'new cases': new_cases, 'new deaths': new_deaths})
     df.to_csv('us.csv', index=False)
 
 def plot():
-    print(f"writing to 'us.png'") 
+    print(f"writing to '{os.path.join(os.getcwd(), 'us.png')}'")
     fig, axes = plt.subplots(2, 2, figsize=(14, 8), dpi=200)
     fig.suptitle('U.S. COVID-19 Data')
     x = dates
