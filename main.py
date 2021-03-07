@@ -155,6 +155,25 @@ while True:
     date = dates[-1]
     mdy = datetime.strptime(str(date), '%Y-%m-%d').strftime('%B %d, %Y')
     md = datetime.strptime(str(date), '%Y-%m-%d').strftime('%B %d')
+    today = datetime.now().strftime('%B %d, %Y')
+
+    def tm():
+        h = datetime.now().strftime('%H')
+        m = datetime.now().strftime('%M')
+        h = int(h)
+        if h >= 13:
+            h -= 12
+            h = str(h)
+            pm = 'P.M'
+            tm = f"{h}:{m} {pm}"
+            return tm
+        else:
+            h = str(h)
+            am = 'A.M'
+            tm = f"{h}:{m} {am}"
+            return tm
+
+    today = f"{today}, {tm()}"
 
     df = pd.DataFrame({"U.S": ["Cases", "Deaths"], "Total Reported": [f"{tc:,d}", f"{td:,d}"], 
         f"On {md}": [f"{cases:,d}", f"{deaths:,d}"], "7-Day Average": [f"{int(cmean):,d}",
@@ -166,7 +185,7 @@ while True:
         with open('README.md', 'w') as f:
             f.write(template.format(date, df))
 
-    write_readme(README_TEMPLATE(), mdy, df)
+    write_readme(README_TEMPLATE(), today, df)
 
     dat = fetch('https://raw.githubusercontent.com/nytimes/covid-19-data/master/us-states.csv')
     df = pd.read_csv(io.StringIO(dat.decode('utf-8')))
