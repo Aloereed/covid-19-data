@@ -212,7 +212,7 @@ while True:
         nat = fetch('https://raw.githubusercontent.com/nytimes/covid-19-data/master/us.csv')
         stat = fetch('https://raw.githubusercontent.com/nytimes/covid-19-data/master/us-states.csv')
         if nat == False and stat == False:
-            timeout(6)
+            timeout(1800)
         else:
             break
     
@@ -227,4 +227,4 @@ while True:
 
     push_git() 
 
-    timeout(6)
+    timeout(1800)
