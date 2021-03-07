@@ -71,7 +71,7 @@ def retry(acc, error):
         print("max retries exceeded")
         exit(1)
 
-def us_arrays(dat):
+def arrays(dat):
     df = pd.read_csv(io.StringIO(dat.decode('utf-8')))
     dates = np.array(df['date'], dtype='datetime64')
     total_cases = np.array(df['cases'], dtype='int64')
@@ -94,7 +94,7 @@ def write_us():
 
 def plot():
     print(f"writing to 'us.png'") 
-    fig, axes = plt.subplots(2, 2, figsize=(14, 8), dpi=179)
+    fig, axes = plt.subplots(2, 2, figsize=(14, 8), dpi=200)
     fig.suptitle('U.S. COVID-19 Data')
     x = dates
     y = total_cases / 1000000
@@ -167,7 +167,7 @@ def write_readme(template, date, df):
     with open('README.md', 'w') as f:
         f.write(template.format(date, df))
 
-def write_states(states, df):
+def write_states(df, states):
     mk_dir('states')
     print(f"writing to '{os.path.join(os.getcwd(), 'states')}'")
     d = df
@@ -191,7 +191,7 @@ def mk_dir(*dirs):
             print(f"creating '{os.path.join(os.getcwd(), d)}'")
             os.mkdir(d)
 
-def ls(df, suffix):
+def parse(df, suffix):
     df = df.sort_values(by=[suffix])
     df = df[suffix]
     df = df.drop_duplicates()
@@ -225,15 +225,15 @@ while True:
             break
     
     if nat != False:
-        dates, total_cases, total_deaths, new_cases, new_deaths = us_arrays(nat) 
+        dates, total_cases, total_deaths, new_cases, new_deaths = arrays(nat) 
         write_us()
         plot()
         update_readme()
 
     if stat != False:
         df = pd.read_csv(io.StringIO(stat.decode('utf-8')))
-        states = ls(df, 'state')
-        write_states(states, df)
+        states = parse(df, 'state')
+        write_states(df, states)
 
     push_git() 
 
