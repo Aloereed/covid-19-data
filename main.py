@@ -119,7 +119,7 @@ def write_us(df):
     df = pd.DataFrame({'date': dates, 'total cases': total_cases, 
         'total deaths': total_deaths, 'new cases': new_cases, 'new deaths': new_deaths})
     df.to_csv('us.csv', index=False)
-    print(f"writing to 'us.png'")
+    print(f"writing to 'us.png'") # make this its own function #
     fig, axes = plt.subplots(2, 2, figsize=(15, 8))
     fig.suptitle('U.S. COVID-19 Data')
     x = dates
@@ -147,8 +147,8 @@ def write_us(df):
     axes[1,1].grid(True, ls='-.')
     axes[1,1].set_yticks(np.arange(min(y), max(y) + 1000, 500))
     axes[1,1].plot(x, y, color='b')
-    plt.savefig('us.png')
-    tc = total_cases[-1]
+    plt.savefig('us.png') # ********************************** #
+    tc = total_cases[-1] # make this its own function ******** #
     td = total_deaths[-1]
     cases = new_cases[-1]
     deaths = new_deaths[-1]
@@ -162,8 +162,8 @@ def write_us(df):
     df = pd.DataFrame({"U.S": ["Cases", "Deaths"], "Total Reported": [f"{tc:,d}", f"{td:,d}"], 
         f"On {md}": [f"{cases:,d}", f"{deaths:,d}"], "7-Day Average": [f"{int(cmean):,d}",
             f"{int(dmean):,d}"]})
-    df = df.to_markdown(index=False, disable_numparse=True)
-    write_readme(README_TEMPLATE(), today, df)
+    df = df.to_markdown(index=False, disable_numparse=True) 
+    write_readme(README_TEMPLATE(), today, df) # ************* #
 
 def ls(df, suffix):
     df = df.sort_values(by=[suffix])
