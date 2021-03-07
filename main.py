@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 import requests, hashlib, os, tempfile, io
 from time import time, sleep
-from tqdm import trange
+from tqdm import tqdm, trange
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+from datetime import datetime
 from README_TEMPLATE import README_TEMPLATE
 from subprocess import check_call
 
@@ -70,6 +71,18 @@ def retry(acc, error):
         print("max retries exceeded")
         exit(1)
 
+def get_diff(arr):
+    arr = np.asarray(arr)
+    diff = np.diff(arr)
+    arr = np.insert(diff, 0, arr[0])
+    return arr
+
+def mk_dir(*dirs):
+    for d in dirs:
+        if not os.path.isdir(d):
+            print(f"creating '{os.path.join(os.getcwd(), d)}'")
+            os.mkdir(d)
+
 while True:
 
     dat = fetch('https://raw.githubusercontent.com/nytimes/covid-19-data/master/us.csv')
@@ -79,36 +92,16 @@ while True:
     total_cases = np.array(df['cases'], dtype='int64')
     total_deaths = np.array(df['deaths'], dtype='int64')
 
-    def get_diff(arr):
-        arr = np.asarray(arr)
-        diff = np.diff(arr)
-        arr = np.insert(diff, 0, arr[0])
-        return arr
-
     new_cases = get_diff(total_cases)
     new_deaths = get_diff(total_deaths)
 
-    def mk_dir(*dirs):
-        for d in dirs:
-            if not os.path.isdir(d):
-                print(f"creating '{os.path.join(os.getcwd(), d)}'")
-                os.mkdir(d)
-
-    mk_dir('data', 'plots')
-
-    print(f"writing to '{os.path.join(os.getcwd(), 'data')}'")
-
-    df = pd.DataFrame({'date': dates, 'total cases': total_cases,
-        'total deaths': total_deaths})
-    df.to_csv('data/us_covid-19_total.csv', index=False)
-
-    df = pd.DataFrame({'date': dates, 'new cases': new_cases, 
-        'new deaths': new_deaths})
-    df.to_csv('data/us_covid-19_new.csv', index=False)
+    print(f"writing to 'us.csv'")
 
     df = pd.DataFrame({'date': dates, 'total cases': total_cases, 
         'total deaths': total_deaths, 'new cases': new_cases, 'new deaths': new_deaths})
-    df.to_csv('data/us_covid-19_data.csv', index=False)
+    df.to_csv('us.csv', index=False)
+
+    mk_dir('plots')
 
     print(f"writing to '{os.path.join(os.getcwd(), 'plots')}'")
 
@@ -150,6 +143,9 @@ while True:
     plt.plot(x, y, color='b')
     plt.savefig('plots/US_New_COVID-19_Deaths.png')
 
+    tc = total_cases[-1]
+    td = total_deaths[-1]
+
     cases = new_cases[-1]
     deaths = new_deaths[-1]
 
@@ -157,19 +153,52 @@ while True:
     dmean = np.mean(new_deaths[-7:])
 
     date = dates[-1]
+    mdy = datetime.strptime(str(date), '%Y-%m-%d').strftime('%B %d, %Y')
+    md = datetime.strptime(str(date), '%Y-%m-%d').strftime('%B %d')
 
-    df_24 = pd.DataFrame({'New cases': [f'{cases:,d}'], 'New deaths': [f'{deaths:,d}']})
-    df_24 = df_24.to_markdown(index=False, disable_numparse=True)
+    df = pd.DataFrame({"U.S": ["Cases", "Deaths"], "Total Reported": [f"{tc:,d}", f"{td:,d}"], 
+        f"On {md}": [f"{cases:,d}", f"{deaths:,d}"], "7-Day Average": [f"{int(cmean):,d}",
+            f"{int(dmean):,d}"]})
+    df = df.to_markdown(index=False, disable_numparse=True)
 
-    df_avg = pd.DataFrame({'Cases': [f'{int(cmean):,d}'], 'Deaths': [f'{int(dmean):,d}']})
-    df_avg = df_avg.to_markdown(index=False, disable_numparse=True)
-
-    def write_readme(template, date, df_24, df_avg):
+    def write_readme(template, date, df):
         print(f"writing to '{os.path.join(os.getcwd(), 'README.md')}'")
         with open('README.md', 'w') as f:
-            f.write(template.format(date, df_24, df_avg))
+            f.write(template.format(date, df))
 
-    write_readme(README_TEMPLATE(), date, df_24, df_avg)
+    write_readme(README_TEMPLATE(), mdy, df)
+
+    dat = fetch('https://raw.githubusercontent.com/nytimes/covid-19-data/master/us-states.csv')
+    df = pd.read_csv(io.StringIO(dat.decode('utf-8')))
+    
+    def ls(df, suffix):
+        df = df.sort_values(by=[suffix])
+        df = df[suffix]
+        df = df.drop_duplicates()
+        df = [df for df in df]
+        return df
+                                                                                                 
+    states = ls(df, 'state')
+                                                                                                 
+    def write_states(states, df):
+        mk_dir('states')
+        print(f"writing to '{os.path.join(os.getcwd(), 'states')}'")
+        d = df
+        s = tqdm(states, ncols=103, leave=False, ascii=' #')
+        for state in s:
+            df = d[d['state'].str.contains(state, case=False)]
+            dates = np.array(df['date'], dtype='datetime64')
+            states = np.array(df['state'])
+            total_cases = np.array(df['cases'], dtype='int64')
+            total_deaths = np.array(df['deaths'], dtype='int64')
+            new_cases = get_diff(total_cases)
+            new_deaths = get_diff(total_deaths)
+            df = pd.DataFrame({'date': dates, 'state': states, 'total cases': total_cases, 
+                'total deaths': total_deaths, 'new cases': new_cases, 'new deaths': new_deaths})
+            df.to_csv(f"states/{state}.csv", index=False)
+            s.set_description(state)
+                                                                                                 
+    write_states(states, df)
 
     def push_git():
         if os.path.isdir('.git'):
