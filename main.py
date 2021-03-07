@@ -27,8 +27,8 @@ def fetch(url):
             fp = os.path.join(tempfile.gettempdir(), hashlib.md5(digest.encode('utf-8')).hexdigest())
             if os.path.isfile(fp) and os.stat(fp).st_size > 0:
                 print("no update available")
-                timeout(3600)
                 acc = 0
+                return False
             else:
                 print(f"writing to '{fp}'")
                 with open(f"{fp}.tmp", 'wb') as f:
@@ -83,158 +83,148 @@ def mk_dir(*dirs):
             print(f"creating '{os.path.join(os.getcwd(), d)}'")
             os.mkdir(d)
 
-while True:
+def tm():
+    h = datetime.now().strftime('%H')
+    h = int(h)
+    m = datetime.now().strftime('%M')
+    am = 'A.M'
+    pm = 'P.M'
+    if h > 12 and h < 24:
+        h -= 12
+        tm = f"{h}:{m} {pm}"
+        return tm
+    elif h == 24:
+        h -= 12
+        tm = f"{h}:{m} {am}"
+        return tm
+    elif h == 12:
+        tm = f"{h}:{m} {pm}"
+        return tm
+    else:
+        tm = f"{h}:{m} {am}"
+        return tm
 
-    dat = fetch('https://raw.githubusercontent.com/nytimes/covid-19-data/master/us.csv')
-   
-    df = pd.read_csv(io.StringIO(dat.decode('utf-8')))
+def write_readme(template, date, df):
+    print(f"writing to '{os.path.join(os.getcwd(), 'README.md')}'")
+    with open('README.md', 'w') as f:
+        f.write(template.format(date, df))
+
+def write_us(df):
     dates = np.array(df['date'], dtype='datetime64')
     total_cases = np.array(df['cases'], dtype='int64')
     total_deaths = np.array(df['deaths'], dtype='int64')
-
     new_cases = get_diff(total_cases)
     new_deaths = get_diff(total_deaths)
-
     print(f"writing to 'us.csv'")
-
     df = pd.DataFrame({'date': dates, 'total cases': total_cases, 
         'total deaths': total_deaths, 'new cases': new_cases, 'new deaths': new_deaths})
     df.to_csv('us.csv', index=False)
-
-    mk_dir('plots')
-
-    print(f"writing to '{os.path.join(os.getcwd(), 'plots')}'")
-
+    print(f"writing to 'us.png'")
+    fig, axes = plt.subplots(2, 2, figsize=(15, 8))
+    fig.suptitle('U.S. COVID-19 Data')
     x = dates
-
     y = total_cases / 1000000
-    plt.figure('US Total COVID-19 Cases', figsize=(15, 8))
-    plt.title('US Total COVID-19 Cases')
-    plt.ylabel('Cases (in millions)')
-    plt.grid(True, ls='-.')
-    plt.yticks(np.arange(min(y), max(y) + 10))
-    plt.plot(x, y, color='b')
-    plt.savefig('plots/US_Total_COVID-19_Cases.png')
-
-    y = total_deaths / 1000
-    plt.figure('US Total COVID-19 Deaths', figsize=(15, 8))
-    plt.title('US Total COVID-19 Deaths')
-    plt.ylabel('Deaths (in thousands)')
-    plt.grid(True, ls='-.')
-    plt.yticks(np.arange(min(y), max(y) + 100, 50))
-    plt.plot(x, y, color='b')
-    plt.savefig('plots/US_Total_COVID-19_Deaths.png')
-
+    axes[0,0].set_title('Total Cases')
+    axes[0,0].set_ylabel('Cases (in millions)')
+    axes[0,0].grid(True, ls='-.')
+    axes[0,0].set_yticks(np.arange(min(y), max(y) + 10, 5))
+    axes[0,0].plot(x, y, color='b')
     y = new_cases / 1000
-    plt.figure('US New COVID-19 Cases', figsize=(15, 8))
-    plt.title('US New COVID-19 Cases')
-    plt.ylabel('Cases (in thousands)')
-    plt.grid(True, ls='-.')
-    plt.yticks(np.arange(min(y), max(y) + 100, 50))
-    plt.plot(x, y, color='b')
-    plt.savefig('plots/US_New_COVID-19_Cases.png')
-
+    axes[0,1].set_title('New Cases')
+    axes[0,1].set_ylabel('Cases (in thousands)')
+    axes[0,1].grid(True, ls='-.')
+    axes[0,1].set_yticks(np.arange(min(y), max(y) + 100, 50))
+    axes[0,1].plot(x, y, color='b')
+    y = total_deaths / 1000
+    axes[1,0].set_title('Total Deaths')
+    axes[1,0].set_ylabel('Deaths (in thousands)')
+    axes[1,0].grid(True, ls='-.')
+    axes[1,0].set_yticks(np.arange(min(y), max(y) + 100, 50))
+    axes[1,0].plot(x, y, color='b')
     y = new_deaths
-    plt.figure('US New COVID-19 Deaths', figsize=(15, 8))
-    plt.title('US New COVID-19 Deaths')
-    plt.ylabel('Deaths')
-    plt.grid(True, ls='-.')
-    plt.yticks(np.arange(min(y), max(y) + 1000, 500))
-    plt.plot(x, y, color='b')
-    plt.savefig('plots/US_New_COVID-19_Deaths.png')
-
+    axes[1,1].set_title('New Deaths')
+    axes[1,1].set_ylabel('Deaths')
+    axes[1,1].grid(True, ls='-.')
+    axes[1,1].set_yticks(np.arange(min(y), max(y) + 1000, 500))
+    axes[1,1].plot(x, y, color='b')
+    plt.savefig('us.png')
     tc = total_cases[-1]
     td = total_deaths[-1]
-
     cases = new_cases[-1]
     deaths = new_deaths[-1]
-
     cmean = np.mean(new_cases[-7:])
     dmean = np.mean(new_deaths[-7:])
-
     date = dates[-1]
     mdy = datetime.strptime(str(date), '%Y-%m-%d').strftime('%B %d, %Y')
     md = datetime.strptime(str(date), '%Y-%m-%d').strftime('%B %d')
     today = datetime.now().strftime('%B %d, %Y')
-
-    def tm():
-        h = datetime.now().strftime('%H')
-        m = datetime.now().strftime('%M')
-        h = int(h)
-        if h >= 13:
-            h -= 12
-            h = str(h)
-            pm = 'P.M'
-            tm = f"{h}:{m} {pm}"
-            return tm
-        else:
-            h = str(h)
-            am = 'A.M'
-            tm = f"{h}:{m} {am}"
-            return tm
-
     today = f"{today}, {tm()} EST"
-
     df = pd.DataFrame({"U.S": ["Cases", "Deaths"], "Total Reported": [f"{tc:,d}", f"{td:,d}"], 
         f"On {md}": [f"{cases:,d}", f"{deaths:,d}"], "7-Day Average": [f"{int(cmean):,d}",
             f"{int(dmean):,d}"]})
     df = df.to_markdown(index=False, disable_numparse=True)
-
-    def write_readme(template, date, df):
-        print(f"writing to '{os.path.join(os.getcwd(), 'README.md')}'")
-        with open('README.md', 'w') as f:
-            f.write(template.format(date, df))
-
     write_readme(README_TEMPLATE(), today, df)
 
-    dat = fetch('https://raw.githubusercontent.com/nytimes/covid-19-data/master/us-states.csv')
-    df = pd.read_csv(io.StringIO(dat.decode('utf-8')))
-    
-    def ls(df, suffix):
-        df = df.sort_values(by=[suffix])
-        df = df[suffix]
-        df = df.drop_duplicates()
-        df = [df for df in df]
-        return df
-                                                                                                 
-    states = ls(df, 'state')
-                                                                                                 
-    def write_states(states, df):
-        mk_dir('states')
-        print(f"writing to '{os.path.join(os.getcwd(), 'states')}'")
-        d = df
-        s = tqdm(states, ncols=103, leave=False, ascii=' #')
-        for state in s:
-            s.set_description(state)
-            df = d[d['state'].str.contains(state, case=False)]
-            dates = np.array(df['date'], dtype='datetime64')
-            states = np.array(df['state'])
-            total_cases = np.array(df['cases'], dtype='int64')
-            total_deaths = np.array(df['deaths'], dtype='int64')
-            new_cases = get_diff(total_cases)
-            new_deaths = get_diff(total_deaths)
-            df = pd.DataFrame({'date': dates, 'state': states, 'total cases': total_cases, 
-                'total deaths': total_deaths, 'new cases': new_cases, 'new deaths': new_deaths})
-            df.to_csv(f"states/{state}.csv", index=False)
-                                                                                                 
-    write_states(states, df)
+def ls(df, suffix):
+    df = df.sort_values(by=[suffix])
+    df = df[suffix]
+    df = df.drop_duplicates()
+    df = [df for df in df]
+    return df
+                                                                                             
+def write_states(states, df):
+    mk_dir('states')
+    print(f"writing to '{os.path.join(os.getcwd(), 'states')}'")
+    d = df
+    s = tqdm(states, ncols=103, leave=False, ascii=' #')
+    for state in s:
+        s.set_description(state)
+        df = d[d['state'].str.contains(state, case=False)]
+        dates = np.array(df['date'], dtype='datetime64')
+        states = np.array(df['state'])
+        total_cases = np.array(df['cases'], dtype='int64')
+        total_deaths = np.array(df['deaths'], dtype='int64')
+        new_cases = get_diff(total_cases)
+        new_deaths = get_diff(total_deaths)
+        df = pd.DataFrame({'date': dates, 'state': states, 'total cases': total_cases, 
+            'total deaths': total_deaths, 'new cases': new_cases, 'new deaths': new_deaths})
+        df.to_csv(f"states/{state}.csv", index=False)
 
-    def push_git():
-        if os.path.isdir('.git'):
+def push_git():
+    if os.path.isdir('.git'):
+        try:
+            check_call('/usr/bin/git add .', shell=True)
+            check_call('/usr/bin/git commit -m "Updating data."', shell=True)
+        except Exception as error:
+            print(f"\n{error}\n")
+        acc = 0
+        while True:
             try:
-                check_call('/usr/bin/git add .', shell=True)
-                check_call('/usr/bin/git commit -m "Updating data."', shell=True)
+                check_call('/usr/bin/git push', shell=True)
+                break
             except Exception as error:
-                print(f"\n{error}\n")
-            acc = 0
-            while True:
-                try:
-                    check_call('/usr/bin/git push', shell=True)
-                    break
-                except Exception as error:
-                    acc += 1
-                    retry(acc, error)
+                acc += 1
+                retry(acc, error)
+
+while True:
+
+    while True:
+        nat = fetch('https://raw.githubusercontent.com/nytimes/covid-19-data/master/us.csv')
+        stat = fetch('https://raw.githubusercontent.com/nytimes/covid-19-data/master/us-states.csv')
+        if nat == False and stat == False:
+            timeout(6)
+        else:
+            break
+    
+    if nat != False:
+        df = pd.read_csv(io.StringIO(nat.decode('utf-8')))
+        write_us(df)
+
+    if stat != False:
+        df = pd.read_csv(io.StringIO(stat.decode('utf-8')))
+        states = ls(df, 'state')
+        write_states(states, df)
 
     push_git() 
 
-    timeout(3600)
+    timeout(6)
