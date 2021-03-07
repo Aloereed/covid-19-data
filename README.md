@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 ###### Updated March 06, 2021, 10:01 P.M EST
+=======
+###### Updated March 06, 2021, 9:57 P.M EST
+>>>>>>> e56c144b50bdccbe3e0b480ab3d493447e234824
 # US COVID-19 Data 
 ###### [ [U.S. Data](us.csv) ([Raw CSV](https://raw.githubusercontent.com/drebrb/covid-19-data/master/us.csv)) | [U.S. State-Level Data](states) ]
 | U.S    | Total Reported   | On March 05   | 7-Day Average   |
