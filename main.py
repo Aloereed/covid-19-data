@@ -125,12 +125,12 @@ while True:
     plt.plot(x, y, color='b')
     plt.savefig('plots/US_Total_COVID-19_Deaths.png')
 
-    y = new_cases / 1000
+    y = new_cases
     plt.figure('US New COVID-19 Cases', figsize=(15, 8))
     plt.title('US New COVID-19 Cases')
     plt.ylabel('Cases (in thousands)')
     plt.grid(True, ls='-.')
-    plt.yticks(np.arange(min(y), max(y) + 100, 50))
+    plt.yticks(np.arange(y[0], (y[-1] // 1000) + 100, 50))
     plt.plot(x, y, color='b')
     plt.savefig('plots/US_New_COVID-19_Cases.png')
 
