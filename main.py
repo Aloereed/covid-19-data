@@ -173,7 +173,7 @@ while True:
             tm = f"{h}:{m} {am}"
             return tm
 
-    today = f"{today}, {tm()}"
+    today = f"{today}, {tm()} EST"
 
     df = pd.DataFrame({"U.S": ["Cases", "Deaths"], "Total Reported": [f"{tc:,d}", f"{td:,d}"], 
         f"On {md}": [f"{cases:,d}", f"{deaths:,d}"], "7-Day Average": [f"{int(cmean):,d}",
