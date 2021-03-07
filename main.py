@@ -205,6 +205,7 @@ while True:
         d = df
         s = tqdm(states, ncols=103, leave=False, ascii=' #')
         for state in s:
+            s.set_description(state)
             df = d[d['state'].str.contains(state, case=False)]
             dates = np.array(df['date'], dtype='datetime64')
             states = np.array(df['state'])
@@ -215,7 +216,6 @@ while True:
             df = pd.DataFrame({'date': dates, 'state': states, 'total cases': total_cases, 
                 'total deaths': total_deaths, 'new cases': new_cases, 'new deaths': new_deaths})
             df.to_csv(f"states/{state}.csv", index=False)
-            s.set_description(state)
                                                                                                  
     write_states(states, df)
 
