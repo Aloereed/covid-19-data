@@ -71,17 +71,75 @@ def retry(acc, error):
         print("max retries exceeded")
         exit(1)
 
+def us_arrays(dat):
+    df = pd.read_csv(io.StringIO(dat.decode('utf-8')))
+    dates = np.array(df['date'], dtype='datetime64')
+    total_cases = np.array(df['cases'], dtype='int64')
+    total_deaths = np.array(df['deaths'], dtype='int64')
+    new_cases = get_diff(total_cases)
+    new_deaths = get_diff(total_deaths)
+    return dates, total_cases, total_deaths, new_cases, new_deaths
+
 def get_diff(arr):
     arr = np.asarray(arr)
     diff = np.diff(arr)
     arr = np.insert(diff, 0, arr[0])
     return arr
 
-def mk_dir(*dirs):
-    for d in dirs:
-        if not os.path.isdir(d):
-            print(f"creating '{os.path.join(os.getcwd(), d)}'")
-            os.mkdir(d)
+def write_us():
+    print(f"writing to 'us.csv'")
+    df = pd.DataFrame({'date': dates, 'total cases': total_cases, 
+        'total deaths': total_deaths, 'new cases': new_cases, 'new deaths': new_deaths})
+    df.to_csv('us.csv', index=False)
+
+def plot():
+    print(f"writing to 'us.png'") 
+    fig, axes = plt.subplots(2, 2, figsize=(14, 8), dpi=179)
+    fig.suptitle('U.S. COVID-19 Data')
+    x = dates
+    y = total_cases / 1000000
+    axes[0,0].set_title('Total Cases')
+    axes[0,0].set_ylabel('Cases (in millions)')
+    axes[0,0].grid(True, ls='-.')
+    axes[0,0].set_yticks(np.arange(min(y), max(y) + 10, 5))
+    axes[0,0].plot(x, y, color='b')
+    y = new_cases / 1000
+    axes[0,1].set_title('New Cases')
+    axes[0,1].set_ylabel('Cases (in thousands)')
+    axes[0,1].grid(True, ls='-.')
+    axes[0,1].set_yticks(np.arange(min(y), max(y) + 100, 50))
+    axes[0,1].plot(x, y, color='b')
+    y = total_deaths / 1000
+    axes[1,0].set_title('Total Deaths')
+    axes[1,0].set_ylabel('Deaths (in thousands)')
+    axes[1,0].grid(True, ls='-.')
+    axes[1,0].set_yticks(np.arange(min(y), max(y) + 100, 50))
+    axes[1,0].plot(x, y, color='b')
+    y = new_deaths
+    axes[1,1].set_title('New Deaths')
+    axes[1,1].set_ylabel('Deaths')
+    axes[1,1].grid(True, ls='-.')
+    axes[1,1].set_yticks(np.arange(min(y), max(y) + 1000, 500))
+    axes[1,1].plot(x, y, color='b')
+    plt.savefig('us.png', bbox_inches='tight') 
+
+def update_readme():
+    tc = total_cases[-1] 
+    td = total_deaths[-1]
+    cases = new_cases[-1]
+    deaths = new_deaths[-1]
+    cmean = np.mean(new_cases[-7:])
+    dmean = np.mean(new_deaths[-7:])
+    date = dates[-1]
+    mdy = datetime.strptime(str(date), '%Y-%m-%d').strftime('%B %d, %Y')
+    md = datetime.strptime(str(date), '%Y-%m-%d').strftime('%B %d')
+    today = datetime.now().strftime('%B %d, %Y')
+    today = f"{today}, {tm()} EST"
+    df = pd.DataFrame({"U.S": ["Cases", "Deaths"], "Total Reported": [f"{tc:,d}", 
+        f"{td:,d}"], f"On {md}": [f"{cases:,d}", f"{deaths:,d}"], 
+        "7-Day Average": [f"{int(cmean):,d}", f"{int(dmean):,d}"]})
+    df = df.to_markdown(index=False, disable_numparse=True) 
+    write_readme(README_TEMPLATE(), today, df)
 
 def tm():
     h = datetime.now().strftime('%H')
@@ -109,69 +167,6 @@ def write_readme(template, date, df):
     with open('README.md', 'w') as f:
         f.write(template.format(date, df))
 
-def write_us(df):
-    dates = np.array(df['date'], dtype='datetime64')
-    total_cases = np.array(df['cases'], dtype='int64')
-    total_deaths = np.array(df['deaths'], dtype='int64')
-    new_cases = get_diff(total_cases)
-    new_deaths = get_diff(total_deaths)
-    print(f"writing to 'us.csv'")
-    df = pd.DataFrame({'date': dates, 'total cases': total_cases, 
-        'total deaths': total_deaths, 'new cases': new_cases, 'new deaths': new_deaths})
-    df.to_csv('us.csv', index=False)
-    print(f"writing to 'us.png'") # make this its own function #
-    fig, axes = plt.subplots(2, 2, figsize=(15, 8))
-    fig.suptitle('U.S. COVID-19 Data')
-    x = dates
-    y = total_cases / 1000000
-    axes[0,0].set_title('Total Cases')
-    axes[0,0].set_ylabel('Cases (in millions)')
-    axes[0,0].grid(True, ls='-.')
-    axes[0,0].set_yticks(np.arange(min(y), max(y) + 10, 5))
-    axes[0,0].plot(x, y, color='b')
-    y = new_cases / 1000
-    axes[0,1].set_title('New Cases')
-    axes[0,1].set_ylabel('Cases (in thousands)')
-    axes[0,1].grid(True, ls='-.')
-    axes[0,1].set_yticks(np.arange(min(y), max(y) + 100, 50))
-    axes[0,1].plot(x, y, color='b')
-    y = total_deaths / 1000
-    axes[1,0].set_title('Total Deaths')
-    axes[1,0].set_ylabel('Deaths (in thousands)')
-    axes[1,0].grid(True, ls='-.')
-    axes[1,0].set_yticks(np.arange(min(y), max(y) + 100, 50))
-    axes[1,0].plot(x, y, color='b')
-    y = new_deaths
-    axes[1,1].set_title('New Deaths')
-    axes[1,1].set_ylabel('Deaths')
-    axes[1,1].grid(True, ls='-.')
-    axes[1,1].set_yticks(np.arange(min(y), max(y) + 1000, 500))
-    axes[1,1].plot(x, y, color='b')
-    plt.savefig('us.png') # ********************************** #
-    tc = total_cases[-1] # make this its own function ******** #
-    td = total_deaths[-1]
-    cases = new_cases[-1]
-    deaths = new_deaths[-1]
-    cmean = np.mean(new_cases[-7:])
-    dmean = np.mean(new_deaths[-7:])
-    date = dates[-1]
-    mdy = datetime.strptime(str(date), '%Y-%m-%d').strftime('%B %d, %Y')
-    md = datetime.strptime(str(date), '%Y-%m-%d').strftime('%B %d')
-    today = datetime.now().strftime('%B %d, %Y')
-    today = f"{today}, {tm()} EST"
-    df = pd.DataFrame({"U.S": ["Cases", "Deaths"], "Total Reported": [f"{tc:,d}", f"{td:,d}"], 
-        f"On {md}": [f"{cases:,d}", f"{deaths:,d}"], "7-Day Average": [f"{int(cmean):,d}",
-            f"{int(dmean):,d}"]})
-    df = df.to_markdown(index=False, disable_numparse=True) 
-    write_readme(README_TEMPLATE(), today, df) # ************* #
-
-def ls(df, suffix):
-    df = df.sort_values(by=[suffix])
-    df = df[suffix]
-    df = df.drop_duplicates()
-    df = [df for df in df]
-    return df
-                                                                                             
 def write_states(states, df):
     mk_dir('states')
     print(f"writing to '{os.path.join(os.getcwd(), 'states')}'")
@@ -189,6 +184,19 @@ def write_states(states, df):
         df = pd.DataFrame({'date': dates, 'state': states, 'total cases': total_cases, 
             'total deaths': total_deaths, 'new cases': new_cases, 'new deaths': new_deaths})
         df.to_csv(f"states/{state}.csv", index=False)
+
+def mk_dir(*dirs):
+    for d in dirs:
+        if not os.path.isdir(d):
+            print(f"creating '{os.path.join(os.getcwd(), d)}'")
+            os.mkdir(d)
+
+def ls(df, suffix):
+    df = df.sort_values(by=[suffix])
+    df = df[suffix]
+    df = df.drop_duplicates()
+    df = [df for df in df]
+    return df
 
 def push_git():
     if os.path.isdir('.git'):
@@ -217,8 +225,10 @@ while True:
             break
     
     if nat != False:
-        df = pd.read_csv(io.StringIO(nat.decode('utf-8')))
-        write_us(df)
+        dates, total_cases, total_deaths, new_cases, new_deaths = us_arrays(nat) 
+        write_us()
+        plot()
+        update_readme()
 
     if stat != False:
         df = pd.read_csv(io.StringIO(stat.decode('utf-8')))
