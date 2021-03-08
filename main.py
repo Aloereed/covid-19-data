@@ -134,14 +134,14 @@ def update_readme():
     mdy = datetime.strptime(str(date), '%Y-%m-%d').strftime('%B %d, %Y')
     md = datetime.strptime(str(date), '%Y-%m-%d').strftime('%B %d')
     today = datetime.now().strftime('%B %d, %Y')
-    today = f"{today}, {tm()} EST"
+    today = f"{today}, {clck()} EST"
     df = pd.DataFrame({"U.S": ["Cases", "Deaths"], "Total Reported": [f"{tc:,d}", 
         f"{td:,d}"], f"On {md}": [f"{cases:,d}", f"{deaths:,d}"], 
         "7-Day Average": [f"{int(cmean):,d}", f"{int(dmean):,d}"]})
     df = df.to_markdown(index=False, disable_numparse=True) 
     write_readme(README_TEMPLATE(), today, df)
 
-def tm():
+def clck():
     h = datetime.now().strftime('%H')
     h = int(h)
     m = datetime.now().strftime('%M')
@@ -149,18 +149,15 @@ def tm():
     pm = 'P.M'
     if h > 12 and h < 24:
         h -= 12
-        tm = f"{h}:{m} {pm}"
-        return tm
+        c = f"{h}:{m} {pm}"
     elif h == 24:
         h -= 12
-        tm = f"{h}:{m} {am}"
-        return tm
+        c = f"{h}:{m} {am}"
     elif h == 12:
-        tm = f"{h}:{m} {pm}"
-        return tm
+        c = f"{h}:{m} {pm}"
     else:
-        tm = f"{h}:{m} {am}"
-        return tm
+        c = f"{h}:{m} {am}"
+    return c
 
 def write_readme(template, date, df):
     print(f"writing to '{os.path.join(os.getcwd(), 'README.md')}'")
