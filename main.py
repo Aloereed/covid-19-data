@@ -231,7 +231,7 @@ while True:
     nat = fetch('https://raw.githubusercontent.com/nytimes/covid-19-data/master/us.csv')
     stat = fetch('https://raw.githubusercontent.com/nytimes/covid-19-data/master/us-states.csv')
     if nat is False and stat is False:
-        timeout(6)
+        timeout(3600)
     if nat is not False:
         df = pd.read_csv(io.StringIO(nat.decode('utf-8')))
         dates, total_cases, total_deaths = get_arrays(df, cols_dtypes)
@@ -245,4 +245,4 @@ while True:
         write_states(df, states)
     if nat or stat is not False:
         push_git() 
-        timeout(6)
+        timeout(3600)
