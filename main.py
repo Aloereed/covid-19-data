@@ -5,6 +5,7 @@ from tqdm import tqdm, trange
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+import matplotlib.ticker as tkr
 from datetime import datetime
 from README_TEMPLATE import README_TEMPLATE
 from subprocess import check_call
@@ -71,14 +72,13 @@ def retry(acc, error):
         print("max retries exceeded")
         exit(1)
 
-def arrays(dat):
-    df = pd.read_csv(io.StringIO(dat.decode('utf-8')))
-    dates = np.array(df['date'], dtype='datetime64')
-    total_cases = np.array(df['cases'], dtype='int64')
-    total_deaths = np.array(df['deaths'], dtype='int64')
-    new_cases = get_diff(total_cases)
-    new_deaths = get_diff(total_deaths)
-    return dates, total_cases, total_deaths, new_cases, new_deaths
+def get_array(df, col, dtype):
+    arr = np.array(df[col], dtype=dtype)
+    return arr
+
+def get_arrays(df, dictionary):
+    arr = [get_array(df, col, dtype) for col, dtype in dictionary.items()]
+    return arr
 
 def get_diff(arr):
     arr = np.asarray(arr)
@@ -87,42 +87,55 @@ def get_diff(arr):
     arr[arr < 0] = 0
     return arr
 
+def get_diffs(*arrs):
+    arr = [get_diff(arr) for arr in arrs]
+    return arr
+
 def write_us():
     print(f"writing to '{os.path.join(os.getcwd(), 'us.csv')}'")
     df = pd.DataFrame({'date': dates, 'total cases': total_cases, 
         'total deaths': total_deaths, 'new cases': new_cases, 'new deaths': new_deaths})
     df.to_csv('us.csv', index=False)
 
-def plot():
-    print(f"writing to '{os.path.join(os.getcwd(), 'us.png')}'")
+def plot(dates, total_cases, new_cases, total_deaths, new_deaths, suffix, fp):
     fig, axes = plt.subplots(2, 2, figsize=(14, 8), dpi=200)
-    fig.suptitle('U.S. COVID-19 Data')
+    fig.suptitle(f"{suffix} COVID-19 Data")
     x = dates
-    y = total_cases / 1000000
+    if total_cases[-1] >= 1_000_000:
+        y = total_cases / 1_000_000
+        label = 'Cases (in millions)'
+    else:
+        y = total_cases
+        label = 'Cases'
+        axes[0,0].get_yaxis().set_major_formatter(
+                tkr.FuncFormatter(lambda y, p: f"{int(y):,d}"))
     axes[0,0].set_title('Total Cases')
-    axes[0,0].set_ylabel('Cases (in millions)')
-    axes[0,0].grid(True, ls='-.')
-    axes[0,0].set_yticks(np.arange(min(y), max(y) + 10, 5))
+    axes[0,0].set_ylabel(label)
+    axes[0,0].grid(True)
     axes[0,0].plot(x, y, color='b')
-    y = new_cases / 1000
+    y = new_cases
     axes[0,1].set_title('New Cases')
-    axes[0,1].set_ylabel('Cases (in thousands)')
-    axes[0,1].grid(True, ls='-.')
-    axes[0,1].set_yticks(np.arange(min(y), max(y) + 100, 50))
+    axes[0,1].set_ylabel('Cases')
+    axes[0,1].get_yaxis().set_major_formatter(
+            tkr.FuncFormatter(lambda y, p: f"{int(y):,d}"))
+    axes[0,1].grid(True)
     axes[0,1].plot(x, y, color='b')
-    y = total_deaths / 1000
+    y = total_deaths
     axes[1,0].set_title('Total Deaths')
-    axes[1,0].set_ylabel('Deaths (in thousands)')
-    axes[1,0].grid(True, ls='-.')
-    axes[1,0].set_yticks(np.arange(min(y), max(y) + 100, 50))
+    axes[1,0].set_ylabel('Deaths')
+    axes[1,0].get_yaxis().set_major_formatter(
+            tkr.FuncFormatter(lambda y, p: f"{int(y):,d}"))
+    axes[1,0].grid(True)
     axes[1,0].plot(x, y, color='b')
     y = new_deaths
     axes[1,1].set_title('New Deaths')
     axes[1,1].set_ylabel('Deaths')
-    axes[1,1].grid(True, ls='-.')
-    axes[1,1].set_yticks(np.arange(min(y), max(y) + 1000, 500))
+    axes[1,1].get_yaxis().set_major_formatter(
+            tkr.FuncFormatter(lambda y, p: f"{int(y):,d}"))
+    axes[1,1].grid(True)
     axes[1,1].plot(x, y, color='b')
-    plt.savefig('us.png', bbox_inches='tight') 
+    plt.savefig(fp, bbox_inches='tight') 
+    plt.close(fig)
 
 def update_readme():
     tc = total_cases[-1] 
@@ -169,19 +182,16 @@ def write_states(df, states):
     mk_dir('states')
     print(f"writing to '{os.path.join(os.getcwd(), 'states')}'")
     d = df
-    s = tqdm(states, ncols=103, leave=False, ascii=' #')
-    for state in s:
+    for state in (s := tqdm(states, ncols=103, leave=False, ascii=' #')):
         s.set_description(state)
         df = d[d['state'].str.contains(f"^{state}$", case=False)]
-        dates = np.array(df['date'], dtype='datetime64')
-        states = np.array(df['state'])
-        total_cases = np.array(df['cases'], dtype='int64')
-        total_deaths = np.array(df['deaths'], dtype='int64')
-        new_cases = get_diff(total_cases)
-        new_deaths = get_diff(total_deaths)
+        dates, total_cases, total_deaths = get_arrays(df, cols_dtypes)
+        states = df['state']
+        new_cases, new_deaths = get_diffs(total_cases, total_deaths)
         df = pd.DataFrame({'date': dates, 'state': states, 'total cases': total_cases, 
             'total deaths': total_deaths, 'new cases': new_cases, 'new deaths': new_deaths})
         df.to_csv(f"states/{state}.csv", index=False)
+        plot(dates, total_cases, new_cases, total_deaths, new_deaths, state, f"states/{state}.png")
 
 def mk_dir(*dirs):
     for d in dirs:
@@ -212,15 +222,23 @@ def push_git():
                 acc += 1
                 retry(acc, error)
 
+cols_dtypes = {
+        'date': 'datetime64', 
+        'cases': 'int64', 
+        'deaths': 'int64'
+        }
+
 while True:
     nat = fetch('https://raw.githubusercontent.com/nytimes/covid-19-data/master/us.csv')
     stat = fetch('https://raw.githubusercontent.com/nytimes/covid-19-data/master/us-states.csv')
     if nat is False and stat is False:
         timeout(3600)
     if nat is not False:
-        dates, total_cases, total_deaths, new_cases, new_deaths = arrays(nat) 
+        df = pd.read_csv(io.StringIO(nat.decode('utf-8')))
+        dates, total_cases, total_deaths = get_arrays(df, cols_dtypes)
+        new_cases, new_deaths = get_diffs(total_cases, total_deaths)
         write_us()
-        plot()
+        plot(dates, total_cases, new_cases, total_deaths, new_deaths, 'U.S', 'us.png')
         update_readme()
     if stat is not False:
         df = pd.read_csv(io.StringIO(stat.decode('utf-8')))
