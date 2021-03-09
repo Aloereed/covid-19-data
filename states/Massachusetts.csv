@@ -149,7 +149,7 @@ date,state,total cases,total deaths,new cases,new deaths
 2020-06-27,Massachusetts,108443,8040,373,28
 2020-06-28,Massachusetts,108667,8060,224,20
 2020-06-29,Massachusetts,108768,8095,101,35
-2020-06-30,Massachusetts,108882,8054,114,-41
+2020-06-30,Massachusetts,108882,8054,114,0
 2020-07-01,Massachusetts,109143,8081,261,27
 2020-07-02,Massachusetts,109338,8132,195,51
 2020-07-03,Massachusetts,109628,8149,290,17
@@ -213,7 +213,7 @@ date,state,total cases,total deaths,new cases,new deaths
 2020-08-30,Massachusetts,128229,9049,199,13
 2020-08-31,Massachusetts,128533,9060,304,11
 2020-09-01,Massachusetts,128888,9064,355,4
-2020-09-02,Massachusetts,121131,9060,-7757,-4
+2020-09-02,Massachusetts,121131,9060,0,0
 2020-09-03,Massachusetts,121546,9077,415,17
 2020-09-04,Massachusetts,121758,9100,212,23
 2020-09-05,Massachusetts,122196,9116,438,16

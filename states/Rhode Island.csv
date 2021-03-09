@@ -207,7 +207,7 @@ date,state,total cases,total deaths,new cases,new deaths
 2020-09-22,Rhode Island,24044,1099,112,2
 2020-09-23,Rhode Island,24177,1102,133,3
 2020-09-24,Rhode Island,24311,1106,134,4
-2020-09-25,Rhode Island,24181,1107,-130,1
+2020-09-25,Rhode Island,24181,1107,0,1
 2020-09-26,Rhode Island,24181,1107,0,0
 2020-09-27,Rhode Island,24181,1107,0,0
 2020-09-28,Rhode Island,24424,1110,243,3

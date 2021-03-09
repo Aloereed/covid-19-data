@@ -36,9 +36,9 @@ date,state,total cases,total deaths,new cases,new deaths
 2020-04-16,Puerto Rico,1043,56,69,5
 2020-04-17,Puerto Rico,1068,58,25,2
 2020-04-18,Puerto Rico,1118,60,50,2
-2020-04-19,Puerto Rico,1213,41,95,-19
+2020-04-19,Puerto Rico,1213,41,95,0
 2020-04-20,Puerto Rico,1252,42,39,1
-2020-04-21,Puerto Rico,915,43,-337,1
+2020-04-21,Puerto Rico,915,43,0,1
 2020-04-22,Puerto Rico,915,46,0,3
 2020-04-23,Puerto Rico,1230,69,315,23
 2020-04-24,Puerto Rico,1276,77,46,8

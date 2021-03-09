@@ -84,6 +84,7 @@ def get_diff(arr):
     arr = np.asarray(arr)
     diff = np.diff(arr)
     arr = np.insert(diff, 0, arr[0])
+    arr[arr < 0] = 0
     return arr
 
 def write_us():

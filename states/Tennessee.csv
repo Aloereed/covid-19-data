@@ -83,7 +83,7 @@ date,state,total cases,total deaths,new cases,new deaths
 2020-05-25,Tennessee,20533,334,417,2
 2020-05-26,Tennessee,20960,339,427,5
 2020-05-27,Tennessee,21360,353,400,14
-2020-05-28,Tennessee,21763,352,403,-1
+2020-05-28,Tennessee,21763,352,403,0
 2020-05-29,Tennessee,22199,356,436,4
 2020-05-30,Tennessee,22676,360,477,4
 2020-05-31,Tennessee,22832,360,156,0

@@ -76,7 +76,7 @@ date,state,total cases,total deaths,new cases,new deaths
 2020-05-19,Hawaii,631,17,1,0
 2020-05-20,Hawaii,633,17,2,0
 2020-05-21,Hawaii,637,17,4,0
-2020-05-22,Hawaii,632,17,-5,0
+2020-05-22,Hawaii,632,17,0,0
 2020-05-23,Hawaii,633,17,1,0
 2020-05-24,Hawaii,633,17,0,0
 2020-05-25,Hawaii,633,17,0,0
@@ -235,7 +235,7 @@ date,state,total cases,total deaths,new cases,new deaths
 2020-10-25,Hawaii,14823,211,117,0
 2020-10-26,Hawaii,14858,211,35,0
 2020-10-27,Hawaii,14920,214,62,3
-2020-10-28,Hawaii,14975,212,55,-2
+2020-10-28,Hawaii,14975,212,55,0
 2020-10-29,Hawaii,15046,214,71,2
 2020-10-30,Hawaii,15145,215,99,1
 2020-10-31,Hawaii,15207,218,62,3

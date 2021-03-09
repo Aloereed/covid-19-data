@@ -170,7 +170,7 @@ date,state,total cases,total deaths,new cases,new deaths
 2020-08-21,Pennsylvania,132461,7629,725,23
 2020-08-22,Pennsylvania,133160,7643,699,14
 2020-08-23,Pennsylvania,133679,7643,519,0
-2020-08-24,Pennsylvania,134246,7642,567,-1
+2020-08-24,Pennsylvania,134246,7642,567,0
 2020-08-25,Pennsylvania,134803,7666,557,24
 2020-08-26,Pennsylvania,135323,7691,520,25
 2020-08-27,Pennsylvania,135958,7702,635,11

@@ -157,7 +157,7 @@ date,state,total cases,total deaths,new cases,new deaths
 2020-07-09,Wisconsin,37358,821,832,3
 2020-07-10,Wisconsin,38414,825,1056,4
 2020-07-11,Wisconsin,39095,829,681,4
-2020-07-12,Wisconsin,39901,828,806,-1
+2020-07-12,Wisconsin,39901,828,806,0
 2020-07-13,Wisconsin,40603,828,702,0
 2020-07-14,Wisconsin,41516,834,913,6
 2020-07-15,Wisconsin,42409,835,893,1
