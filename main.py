@@ -40,10 +40,9 @@ def fetch(url):
             acc += 1
             retry(acc, error)
 
-def timeout(s):
-    timeout = trange(s, ncols=103, leave=False, ascii=' #')
-    for t in timeout:
-        timeout.set_description(uptime())
+def timeout(sec):
+    for s in (t := trange(sec, ncols=103, leave=False, ascii=' #')):
+        t.set_description(uptime())
         sleep(1)
 
 def uptime(): 
@@ -232,7 +231,7 @@ while True:
     nat = fetch('https://raw.githubusercontent.com/nytimes/covid-19-data/master/us.csv')
     stat = fetch('https://raw.githubusercontent.com/nytimes/covid-19-data/master/us-states.csv')
     if nat is False and stat is False:
-        timeout(3600)
+        timeout(6)
     if nat is not False:
         df = pd.read_csv(io.StringIO(nat.decode('utf-8')))
         dates, total_cases, total_deaths = get_arrays(df, cols_dtypes)
@@ -246,4 +245,4 @@ while True:
         write_states(df, states)
     if nat or stat is not False:
         push_git() 
-        timeout(3600)
+        timeout(6)
