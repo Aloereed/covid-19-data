@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python3.8
 import requests, hashlib, os, tempfile, io
 from time import time, sleep
 from tqdm import tqdm, trange

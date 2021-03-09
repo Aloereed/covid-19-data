@@ -1,5 +1,6 @@
+requests
+tqdm
 pandas
 matplotlib
-tqdm
 tabulate
 # README_TEMPLATE.py
