@@ -171,7 +171,7 @@ def write_states(df, states):
     s = tqdm(states, ncols=103, leave=False, ascii=' #')
     for state in s:
         s.set_description(state)
-        df = d[d['state'].str.contains(state, case=False)]
+        df = d[d['state'].str.contains(f"^{state}$", case=False)]
         dates = np.array(df['date'], dtype='datetime64')
         states = np.array(df['state'])
         total_cases = np.array(df['cases'], dtype='int64')
@@ -212,26 +212,19 @@ def push_git():
                 retry(acc, error)
 
 while True:
-
-    while True:
-        nat = fetch('https://raw.githubusercontent.com/nytimes/covid-19-data/master/us.csv')
-        stat = fetch('https://raw.githubusercontent.com/nytimes/covid-19-data/master/us-states.csv')
-        if nat == False and stat == False:
-            timeout(1800)
-        else:
-            break
-    
-    if nat != False:
+    nat = fetch('https://raw.githubusercontent.com/nytimes/covid-19-data/master/us.csv')
+    stat = fetch('https://raw.githubusercontent.com/nytimes/covid-19-data/master/us-states.csv')
+    if nat is False and stat is False:
+        timeout(3600)
+    if nat is not False:
         dates, total_cases, total_deaths, new_cases, new_deaths = arrays(nat) 
         write_us()
         plot()
         update_readme()
-
-    if stat != False:
+    if stat is not False:
         df = pd.read_csv(io.StringIO(stat.decode('utf-8')))
         states = parse(df, 'state')
         write_states(df, states)
-
-    push_git() 
-
-    timeout(1800)
+    if nat or stat is not False:
+        push_git() 
+        timeout(3600)
