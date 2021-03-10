@@ -52,14 +52,9 @@ def uptime():
     h = (et // 3600) % 24
     m = (et // 60) % 60
     s = et % 60
-    d = int(d) 
-    h = int(h)
-    m = int(m)
-    s = int(s)
+    d, h, m, s = [int(i) for i in (d, h, m, s)]
     d = str(d).zfill(3)
-    h = str(h).zfill(2)
-    m = str(m).zfill(2)
-    s = str(s).zfill(2)
+    h, m, s = [str(i).zfill(2) for i in (h, m, s)]
     uptime = f"uptime: {d} {h}:{m}:{s}"
     return uptime
 
@@ -90,13 +85,11 @@ def get_diffs(*arrs):
     arr = [get_diff(arr) for arr in arrs]
     return arr
 
-def write_us():
-    print(f"writing to '{os.path.join(os.getcwd(), 'us.csv')}'")
-    df = pd.DataFrame({'date': dates, 'total cases': total_cases, 
-        'total deaths': total_deaths, 'new cases': new_cases, 'new deaths': new_deaths})
-    df.to_csv('us.csv', index=False)
+def write_csv(dictionary, fn):
+    df = pd.DataFrame(dictionary)
+    df.to_csv(fn, index=False)
 
-def plot(dates, total_cases, new_cases, total_deaths, new_deaths, suffix, fp):
+def plot(dict_values, suffix, fp):
     fig, axes = plt.subplots(2, 2, figsize=(14, 8), dpi=200)
     fig.suptitle(f"{suffix} COVID-19 Data")
     x = dates
@@ -154,6 +147,11 @@ def update_readme():
     df = df.to_markdown(index=False, disable_numparse=True) 
     write_readme(README_TEMPLATE(), today, df)
 
+def write_readme(template, date, df):
+    print(f"writing to '{os.path.join(os.getcwd(), 'README.md')}'")
+    with open('README.md', 'w') as f:
+        f.write(template.format(date, df))
+
 def clck():
     h = datetime.now().strftime('%H')
     h = int(h)
@@ -171,26 +169,6 @@ def clck():
     else:
         c = f"{h}:{m} {am}"
     return c
-
-def write_readme(template, date, df):
-    print(f"writing to '{os.path.join(os.getcwd(), 'README.md')}'")
-    with open('README.md', 'w') as f:
-        f.write(template.format(date, df))
-
-def write_states(df, states):
-    mk_dir('states')
-    print(f"writing to '{os.path.join(os.getcwd(), 'states')}'")
-    d = df
-    for state in (s := tqdm(states, ncols=103, leave=False, ascii=' #')):
-        s.set_description(state)
-        df = d[d['state'].str.contains(f"^{state}$", case=False)]
-        dates, total_cases, total_deaths = get_arrays(df, cols_dtypes)
-        states = df['state']
-        new_cases, new_deaths = get_diffs(total_cases, total_deaths)
-        df = pd.DataFrame({'date': dates, 'state': states, 'total cases': total_cases, 
-            'total deaths': total_deaths, 'new cases': new_cases, 'new deaths': new_deaths})
-        df.to_csv(f"states/{state}.csv", index=False)
-        plot(dates, total_cases, new_cases, total_deaths, new_deaths, state, f"states/{state}.png")
 
 def mk_dir(*dirs):
     for d in dirs:
@@ -221,8 +199,15 @@ def push_git():
                 acc += 1
                 retry(acc, error)
 
-cols_dtypes = {
+us_cols_dtypes = {
         'date': 'datetime64', 
+        'cases': 'int64', 
+        'deaths': 'int64'
+        }
+
+st_cols_dtypes = {
+        'date': 'datetime64', 
+        'state': 'U',
         'cases': 'int64', 
         'deaths': 'int64'
         }
@@ -234,15 +219,40 @@ while True:
         timeout(3600)
     if nat is not False:
         df = pd.read_csv(io.StringIO(nat.decode('utf-8')))
-        dates, total_cases, total_deaths = get_arrays(df, cols_dtypes)
+        dates, total_cases, total_deaths = get_arrays(df, us_cols_dtypes)
         new_cases, new_deaths = get_diffs(total_cases, total_deaths)
-        write_us()
-        plot(dates, total_cases, new_cases, total_deaths, new_deaths, 'U.S', 'us.png')
+        usd = { 
+                'date': dates,
+                'total cases': total_cases,
+                'total deaths': total_deaths,
+                'new cases': new_cases,
+                'new deaths': new_deaths
+                }
+        print(f"writing to '{os.path.join(os.getcwd(), 'us.csv')}'")
+        write_csv(usd, 'us.csv')
+        print(f"writing to '{os.path.join(os.getcwd(), 'us.png')}'")
+        plot(usd.values(), 'U.S', 'us.png')
         update_readme()
     if stat is not False:
-        df = pd.read_csv(io.StringIO(stat.decode('utf-8')))
-        states = parse(df, 'state')
-        write_states(df, states)
+        d = pd.read_csv(io.StringIO(stat.decode('utf-8'))) 
+        states = parse(d, 'state')
+        mk_dir('states')
+        print(f"writing to '{os.path.join(os.getcwd(), 'states')}'")
+        for state in (s := tqdm(states, ncols=103, leave=False, ascii=' #')):
+            s.set_description(state)
+            df = d[d['state'].str.contains(f"^{state}$", case=False)]
+            dates, states, total_cases, total_deaths = get_arrays(df, st_cols_dtypes)
+            new_cases, new_deaths = get_diffs(total_cases, total_deaths)
+            std = {
+                    'date': dates,
+                    'state': states,
+                    'total cases': total_cases,
+                    'total deaths': total_deaths,
+                    'new cases': new_cases,
+                    'new deaths': new_deaths
+                    }            
+            write_csv(std, f"states/{state}.csv")
+            plot(std.values(), state, f"states/{state}.png")
     if nat or stat is not False:
         push_git() 
         timeout(3600)
