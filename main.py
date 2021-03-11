@@ -130,20 +130,19 @@ def plot(dict_values, suffix, fp):
     plt.close(fig)
 
 def update_readme():
-    tc = total_cases[-1] 
-    td = total_deaths[-1]
-    cases = new_cases[-1]
-    deaths = new_deaths[-1]
-    cmean = np.mean(new_cases[-7:])
-    dmean = np.mean(new_deaths[-7:])
+    tc, td = total_cases[-1], total_deaths[-1]
+    cases, deaths = new_cases[-1], new_deaths[-1]
+    cmean, dmean = np.mean(new_cases[-7:]), np.mean(new_deaths[-7:])
     date = dates[-1]
-    mdy = datetime.strptime(str(date), '%Y-%m-%d').strftime('%B %d, %Y')
     md = datetime.strptime(str(date), '%Y-%m-%d').strftime('%B %d')
     today = datetime.now().strftime('%B %d, %Y')
     today = f"{today}, {clck()} EST"
-    df = pd.DataFrame({"U.S": ["Cases", "Deaths"], "Total Reported": [f"{tc:,d}", 
-        f"{td:,d}"], f"On {md}": [f"{cases:,d}", f"{deaths:,d}"], 
-        "7-Day Average": [f"{int(cmean):,d}", f"{int(dmean):,d}"]})
+    df = pd.DataFrame({
+        "U.S": ["Cases", "Deaths"], 
+        "Total Reported": [f"{tc:,d}", f"{td:,d}"], 
+        f"On {md}": [f"{cases:,d}", f"{deaths:,d}"], 
+        "7-Day Average": [f"{int(cmean):,d}", f"{int(dmean):,d}"]
+        })
     df = df.to_markdown(index=False, disable_numparse=True) 
     write_readme(README_TEMPLATE(), today, df)
 
@@ -199,26 +198,20 @@ def push_git():
                 acc += 1
                 retry(acc, error)
 
-us_cols_dtypes = {
-        'date': 'datetime64', 
-        'cases': 'int64', 
-        'deaths': 'int64'
-        }
-
-st_cols_dtypes = {
-        'date': 'datetime64', 
-        'state': 'U',
-        'cases': 'int64', 
-        'deaths': 'int64'
-        }
-
 while True:
     nat = fetch('https://raw.githubusercontent.com/nytimes/covid-19-data/master/us.csv')
     stat = fetch('https://raw.githubusercontent.com/nytimes/covid-19-data/master/us-states.csv')
+    
     if nat is False and stat is False:
         timeout(3600)
+    
     if nat is not False:
         df = pd.read_csv(io.StringIO(nat.decode('utf-8')))
+        us_cols_dtypes = {
+                'date': 'datetime64', 
+                'cases': 'int64', 
+                'deaths': 'int64'
+                }
         dates, total_cases, total_deaths = get_arrays(df, us_cols_dtypes)
         new_cases, new_deaths = get_diffs(total_cases, total_deaths)
         usd = { 
@@ -233,6 +226,7 @@ while True:
         print(f"writing to '{os.path.join(os.getcwd(), 'us.png')}'")
         plot(usd.values(), 'U.S', 'us.png')
         update_readme()
+    
     if stat is not False:
         d = pd.read_csv(io.StringIO(stat.decode('utf-8'))) 
         states = parse(d, 'state')
@@ -241,6 +235,12 @@ while True:
         for state in (s := tqdm(states, ncols=103, leave=False, ascii=' #')):
             s.set_description(state)
             df = d[d['state'].str.contains(f"^{state}$", case=False)]
+            st_cols_dtypes = {
+                'date': 'datetime64', 
+                'state': 'U',
+                'cases': 'int64',
+                'deaths': 'int64'
+                }
             dates, states, total_cases, total_deaths = get_arrays(df, st_cols_dtypes)
             new_cases, new_deaths = get_diffs(total_cases, total_deaths)
             std = {
@@ -253,6 +253,7 @@ while True:
                     }            
             write_csv(std, f"states/{state}.csv")
             plot(std.values(), state, f"states/{state}.png")
+    
     if nat or stat is not False:
         push_git() 
         timeout(3600)
