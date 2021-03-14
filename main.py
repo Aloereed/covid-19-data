@@ -160,8 +160,8 @@ def clck():
     if h > 12 and h < 24:
         h -= 12
         c = f"{h}:{m} {pm}"
-    elif h == 24:
-        h -= 12
+    elif h == 0:
+        h += 12
         c = f"{h}:{m} {am}"
     elif h == 12:
         c = f"{h}:{m} {pm}"
