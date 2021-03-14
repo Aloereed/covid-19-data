@@ -67,12 +67,10 @@ def retry(acc, error):
         exit(1)
 
 def get_array(df, col, dtype):
-    arr = np.array(df[col], dtype=dtype)
-    return arr
+    return np.array(df[col], dtype=dtype)
 
 def get_arrays(df, dictionary):
-    arr = [get_array(df, col, dtype) for col, dtype in dictionary.items()]
-    return arr
+    return [get_array(df, col, dtype) for col, dtype in dictionary.items()]
 
 def get_diff(arr):
     arr = np.asarray(arr)
@@ -82,8 +80,7 @@ def get_diff(arr):
     return arr
 
 def get_diffs(*arrs):
-    arr = [get_diff(arr) for arr in arrs]
-    return arr
+    return [get_diff(arr) for arr in arrs]
 
 def write_csv(dictionary, fn):
     df = pd.DataFrame(dictionary)
@@ -157,7 +154,7 @@ def clck():
     m = datetime.now().strftime('%M')
     am = 'A.M'
     pm = 'P.M'
-    if h >= 0:
+    if h < 12:
         if h == 0:
             h += 12
         c = f"{h}:{m} {am}"
