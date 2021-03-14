@@ -157,16 +157,14 @@ def clck():
     m = datetime.now().strftime('%M')
     am = 'A.M'
     pm = 'P.M'
-    if h > 12 and h < 24:
-        h -= 12
-        c = f"{h}:{m} {pm}"
-    elif h == 0:
-        h += 12
+    if h >= 0:
+        if h == 0:
+            h += 12
         c = f"{h}:{m} {am}"
-    elif h == 12:
+    elif h >= 12:
+        if h != 12:
+            h -= 12
         c = f"{h}:{m} {pm}"
-    else:
-        c = f"{h}:{m} {am}"
     return c
 
 def mk_dir(*dirs):
