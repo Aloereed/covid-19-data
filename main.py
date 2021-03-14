@@ -227,8 +227,8 @@ while True:
         states = parse(d, 'state')
         mk_dir('states')
         print(f"writing to '{os.path.join(os.getcwd(), 'states')}'")
-        for state in (s := tqdm(states, ncols=103, leave=False, ascii=' #')):
-            s.set_description(state)
+        for state in (t := tqdm(states, ncols=103, leave=False, ascii=' #')):
+            t.set_description(state)
             df = d[d['state'].str.contains(f"^{state}$", case=False)]
             st_cols_dtypes = {
                 'date': 'datetime64', 
