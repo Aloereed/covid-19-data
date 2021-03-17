@@ -309,13 +309,13 @@ while True:
         mk_dir('vaccinations')
         write_csv(usd, 'vaccinations/us_vaccinations.csv')
         x = dates
-        y1 = total_doses
+        y1 = total_doses 
         y2 = first_dose 
         y3 = second_dose
         fig, ax = plt.subplots(figsize=(12, 7), dpi=200)
         fig.suptitle('U.S COVID-19 Vaccinations')
         ax.get_yaxis().set_major_formatter(
-                tkr.FuncFormatter(lambda y, p: f"{y:1.1f}M"))
+                tkr.FuncFormatter(lambda y, p: f"{y / 1_000_000}M"))
         fig.autofmt_xdate()
         ax.grid(True)
         ax.plot(x, y1, label='Total Doses')
