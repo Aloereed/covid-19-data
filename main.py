@@ -10,8 +10,6 @@ from datetime import datetime
 from README_TEMPLATE import README_TEMPLATE
 from subprocess import check_call
 
-st = time()
-
 def fetch(url): 
     acc = 0
     while True:
@@ -83,46 +81,43 @@ def get_diffs(*arrs):
     return [get_diff(arr) for arr in arrs]
 
 def write_csv(dictionary, fn):
-    df = pd.DataFrame(dictionary)
-    df.to_csv(fn, index=False)
+    pd.DataFrame(dictionary).to_csv(fn, index=False)
 
-def plot(dict_values, suffix, fp):
-    fig, axes = plt.subplots(2, 2, figsize=(14, 8), dpi=200)
+def plot(arrays, suffix, fp):
+    fig, ax = plt.subplots(2, 2, figsize=(12, 7), dpi=200)
     fig.suptitle(f"{suffix} COVID-19 Data")
     x = dates
+    fig.autofmt_xdate()
     if total_cases[-1] >= 1_000_000:
         y = total_cases / 1_000_000
-        label = 'Cases (in millions)'
+        ax[0,0].get_yaxis().set_major_formatter(
+                tkr.FuncFormatter(lambda y, p: f"{y}M"))
     else:
         y = total_cases
         label = 'Cases'
-        axes[0,0].get_yaxis().set_major_formatter(
+        ax[0,0].get_yaxis().set_major_formatter(
                 tkr.FuncFormatter(lambda y, p: f"{int(y):,d}"))
-    axes[0,0].set_title('Total Cases')
-    axes[0,0].set_ylabel(label)
-    axes[0,0].grid(True)
-    axes[0,0].plot(x, y, color='b')
+    ax[0,0].set_title('Total Cases')
+    ax[0,0].grid(True)
+    ax[0,0].plot(x, y, color='b')
     y = new_cases
-    axes[0,1].set_title('New Cases')
-    axes[0,1].set_ylabel('Cases')
-    axes[0,1].get_yaxis().set_major_formatter(
+    ax[0,1].set_title('New Cases')
+    ax[0,1].get_yaxis().set_major_formatter(
             tkr.FuncFormatter(lambda y, p: f"{int(y):,d}"))
-    axes[0,1].grid(True)
-    axes[0,1].plot(x, y, color='b')
+    ax[0,1].grid(True)
+    ax[0,1].plot(x, y, color='b')
     y = total_deaths
-    axes[1,0].set_title('Total Deaths')
-    axes[1,0].set_ylabel('Deaths')
-    axes[1,0].get_yaxis().set_major_formatter(
+    ax[1,0].set_title('Total Deaths')
+    ax[1,0].get_yaxis().set_major_formatter(
             tkr.FuncFormatter(lambda y, p: f"{int(y):,d}"))
-    axes[1,0].grid(True)
-    axes[1,0].plot(x, y, color='b')
+    ax[1,0].grid(True)
+    ax[1,0].plot(x, y, color='b')
     y = new_deaths
-    axes[1,1].set_title('New Deaths')
-    axes[1,1].set_ylabel('Deaths')
-    axes[1,1].get_yaxis().set_major_formatter(
+    ax[1,1].set_title('New Deaths')
+    ax[1,1].get_yaxis().set_major_formatter(
             tkr.FuncFormatter(lambda y, p: f"{int(y):,d}"))
-    axes[1,1].grid(True)
-    axes[1,1].plot(x, y, color='b')
+    ax[1,1].grid(True)
+    ax[1,1].plot(x, y, color='b')
     plt.savefig(fp, bbox_inches='tight') 
     plt.close(fig)
 
@@ -193,15 +188,56 @@ def push_git():
                 acc += 1
                 retry(acc, error)
 
+def fetch_all(urls):
+    return [fetch(url) for url in urls]
+
+def nan_to_mean(array):
+    pos = []
+    for i in range(len((a := array)) - 1):
+        if a[i] >= 0:
+            pos.append(a[i])
+        else:
+            if a[i+1] >= 0:
+                x = pos[-1]
+                y = a[i+1]
+                a[i] = (y + x) / 2
+                pos.append(a[i])
+            elif a[i+2] >= 0:
+                x = pos[-1]
+                y = a[i+2]
+                n = (y + x) / 2
+                a[i] = (n + x) / 2
+                a[i+1] = (y + x) / 2
+                pos.append(a[i])
+                pos.append(a[i+1])
+            elif a[i+3] >= 0:
+                x = pos[-1]
+                y = a[i+3]
+                n = (y + x) / 2
+                a[i] = (n + x) / 2
+                a[i+2] = (n + y) / 2
+                a[i+1] = (a[i+2] + a[i]) / 2
+                pos.append(a[i])
+                pos.append(a[i+1])
+                pos.append(a[i+2])
+
+st = time()
+
 while True:
-    nat = fetch('https://raw.githubusercontent.com/nytimes/covid-19-data/master/us.csv')
-    stat = fetch('https://raw.githubusercontent.com/nytimes/covid-19-data/master/us-states.csv')
-    
-    if nat is False and stat is False:
+    urls = (
+            'https://raw.githubusercontent.com/nytimes/covid-19-data/master/us.csv', 
+            'https://raw.githubusercontent.com/nytimes/covid-19-data/master/us-states.csv', 
+            'https://raw.githubusercontent.com/owid/covid-19-data/master/public/data/vaccinations/vaccinations.csv', 
+            'https://raw.githubusercontent.com/owid/covid-19-data/master/public/data/vaccinations/us_state_vaccinations.csv'
+            )
+        
+    ncd, scd, nvc, svc = fetch_all(urls)
+
+    if any([ncd, scd, nvc, svc]) is False:
         timeout(3600)
     
-    if nat is not False:
-        df = pd.read_csv(io.StringIO(nat.decode('utf-8')))
+    if ncd is not False:
+        df = pd.read_csv(io.StringIO(ncd.decode('utf-8')))
         us_cols_dtypes = {
                 'date': 'datetime64', 
                 'cases': 'int64', 
@@ -222,8 +258,8 @@ while True:
         plot(usd.values(), 'U.S', 'us.png')
         update_readme()
     
-    if stat is not False:
-        d = pd.read_csv(io.StringIO(stat.decode('utf-8'))) 
+    if scd is not False:
+        d = pd.read_csv(io.StringIO(scd.decode('utf-8'))) 
         states = parse(d, 'state')
         mk_dir('states')
         print(f"writing to '{os.path.join(os.getcwd(), 'states')}'")
@@ -249,6 +285,97 @@ while True:
             write_csv(std, f"states/{state}.csv")
             plot(std.values(), state, f"states/{state}.png")
     
-    if nat or stat is not False:
+    if nvc is not False:
+        df = pd.read_csv(io.StringIO(nvc.decode('utf-8')))
+        df = df[df['location'].str.contains("United States", case=False)]
+        us_cols_dtypes = {
+                'date': 'datetime64',
+                'people_vaccinated': 'float32',
+                'people_fully_vaccinated': 'float32'
+                }
+        dates, first_dose, second_dose = get_arrays(df, us_cols_dtypes)
+        nan_to_mean(first_dose)
+        second_dose[0:25] = 0
+        nan_to_mean(second_dose)
+        first_dose.astype(np.int64)
+        second_dose.astype(np.int64)
+        total_doses = np.array(first_dose + second_dose, dtype='int64')
+        usd = {
+                'date': dates,
+                'total doses': total_doses,
+                'first dose': first_dose,
+                'second dose': second_dose
+                }
+        mk_dir('vaccinations')
+        write_csv(usd, 'vaccinations/us_vaccinations.csv')
+        x = dates
+        y1 = total_doses
+        y2 = first_dose 
+        y3 = second_dose
+        fig, ax = plt.subplots(figsize=(12, 7), dpi=200)
+        fig.suptitle('U.S COVID-19 Vaccinations')
+        ax.get_yaxis().set_major_formatter(
+                tkr.FuncFormatter(lambda y, p: f"{int(y):,d}"))
+        fig.autofmt_xdate()
+        ax.grid(True)
+        ax.plot(x, y1, label='Total Doses')
+        ax.plot(x, y2, label='First Dose')
+        ax.plot(x, y3, label='Second Dose')
+        ax.legend()
+        plt.savefig('vaccinations/us_vaccinations.png', bbox_inches='tight')
+        plt.close()
+
+    if svc is not False:
+        d = pd.read_csv(io.StringIO(svc.decode('utf-8'))) 
+        states = parse(d, 'location')
+        states.remove('Long Term Care')
+        states.remove('United States')
+        mk_dir('vaccinations', 'vaccinations/states')
+        print(f"writing to '{os.path.join(os.getcwd(), 'vaccinations/states')}'")
+        for state in (t := tqdm(states, ncols=103, leave=False, ascii=' #')):
+            t.set_description(state)
+            df = d[d['location'].str.contains(f"^{state}$", case=False)]
+            st_cols_dtypes = {
+                'date': 'datetime64', 
+                'location': 'U',
+                'people_vaccinated': 'float32',
+                'people_fully_vaccinated': 'float32'
+                }
+            dates, states, first_dose, second_dose = get_arrays(df, st_cols_dtypes)
+            if (np.isnan(first_dose[0])):
+                first_dose[0] = 0
+            if (np.isnan(second_dose[0])):
+                second_dose[0] = 0
+            nan_to_mean(first_dose)
+            nan_to_mean(second_dose)
+            first_dose.astype(np.int64)
+            second_dose.astype(np.int64)
+            total_doses = np.array(first_dose + second_dose, dtype='int64')
+            std = {
+                    'date': dates,
+                    'state': states,
+                    'total doses': total_doses,
+                    'first dose': first_dose, 
+                    'second dose': second_dose,
+                    }            
+            write_csv(std, f"vaccinations/states/{state}.csv")
+            x = dates
+            y1 = total_doses 
+            y2 = first_dose 
+            y3 = second_dose
+            fig, ax = plt.subplots(figsize=(12, 7), dpi=200)
+            fig.suptitle(f"{state} COVID-19 Vaccinations")
+            ax.grid(True)
+            ax.get_yaxis().set_major_formatter(
+              tkr.FuncFormatter(lambda y, p: f"{int(y):,d}")) 
+            ax.plot(x, y1, label='Total Doses')
+            ax.plot(x, y2, label='First Dose')
+            ax.plot(x, y3, label='Second Dose')
+            fig.autofmt_xdate()
+            ax.legend()
+            plt.savefig(f"vaccinations/states/{state}_vaccinations.png", bbox_inches='tight')
+            plt.close()
+
+    if any([ncd, scd, nvc, svc]) is True:
         push_git() 
         timeout(3600)
