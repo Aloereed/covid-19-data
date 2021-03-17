@@ -315,7 +315,7 @@ while True:
         fig, ax = plt.subplots(figsize=(12, 7), dpi=200)
         fig.suptitle('U.S COVID-19 Vaccinations')
         ax.get_yaxis().set_major_formatter(
-                tkr.FuncFormatter(lambda y, p: f"{int(y):,d}"))
+                tkr.FuncFormatter(lambda y, p: f"{y:1.1f}M"))
         fig.autofmt_xdate()
         ax.grid(True)
         ax.plot(x, y1, label='Total Doses')
