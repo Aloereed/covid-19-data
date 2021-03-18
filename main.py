@@ -297,8 +297,8 @@ while True:
         nan_to_mean(first_dose)
         second_dose[0:25] = 0
         nan_to_mean(second_dose)
-        first_dose = np.array(first_dose, dtype='int64')
-        second_dose = np.array(second_dose, dtype='int64')       
+        first_dose = first_dose.astype(np.int64)
+        second_dose = second_dose.astype(np.int64)  
         total_doses = np.array(first_dose + second_dose, dtype='int64')
         usd = {
                 'date': dates,
@@ -348,8 +348,8 @@ while True:
                 second_dose[0] = 0
             nan_to_mean(first_dose)
             nan_to_mean(second_dose)
-            first_dose = np.array(first_dose, dtype='int64')
-            second_dose = np.array(second_dose, dtype='int64')
+            first_dose = first_dose.astype(np.int64)
+            second_dose = second_dose.astype(np.int64)
             total_doses = np.array(first_dose + second_dose, dtype='int64')
             std = {
                     'date': dates,
