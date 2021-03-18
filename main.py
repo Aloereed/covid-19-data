@@ -250,12 +250,13 @@ while True:
             'https://raw.githubusercontent.com/nytimes/covid-19-data/master/us.csv', 
             'https://raw.githubusercontent.com/nytimes/covid-19-data/master/us-states.csv', 
             'https://raw.githubusercontent.com/owid/covid-19-data/master/public/data/vaccinations/vaccinations.csv', 
-            'https://raw.githubusercontent.com/owid/covid-19-data/master/public/data/vaccinations/us_state_vaccinations.csv'
+            'https://raw.githubusercontent.com/owid/covid-19-data/master/public/data/vaccinations/us_state_vaccinations.csv',
+            'https://raw.githubusercontent.com/owid/covid-19-data/master/public/data/vaccinations/vaccinations-by-manufacturer.csv'
             )
         
-    ncd, scd, nvc, svc = fetch_all(urls)
+    ncd, scd, nvc, svc, man = fetch_all(urls)
 
-    if any([ncd, scd, nvc, svc]) is False:
+    if any([ncd, scd, nvc, svc, man]) is False:
         timeout(3600)
     
     if ncd is not False:
@@ -369,6 +370,44 @@ while True:
                     }            
             write_csv(stv, f"vaccinations/states/{state}.csv")
             plot_vacs(stv.values(), state, f"vaccinations/states/{state}.png") 
-    if any([ncd, scd, nvc, svc]) is True:
+    
+    if man is not False:
+        df = pd.read_csv(io.StringIO(man.decode('utf-8')))
+        df = df[df['location'].str.contains("United States", case=False)]
+        jj = df[df['vaccine'].str.contains('Johnson&Johnson', case=False)]
+        pb = df[df['vaccine'].str.contains('Pfizer/BioNTech', case=False)]
+        ma = df[df['vaccine'].str.contains('Moderna', case=False)]
+        mk_dir('vaccinations')
+        print(f"writing to '{os.path.join(os.getcwd(), 'vaccinations')}'")
+        mf_cols_dtypes = {
+                'date': 'datetime64', 
+                'total_vaccinations': 'int64'
+                }
+        jj_dates, jj_total_vaccinations = get_arrays(jj, mf_cols_dtypes)
+        pb_dates, pb_total_vaccinations = get_arrays(pb, mf_cols_dtypes)
+        ma_dates, ma_total_vaccinations = get_arrays(ma, mf_cols_dtypes)
+        x1 = pb_dates
+        x2 = ma_dates
+        x3 = jj_dates
+        y1 = pb_total_vaccinations
+        y2 = ma_total_vaccinations 
+        y3 = jj_total_vaccinations 
+        fig, ax = plt.subplots(figsize=(12, 7), dpi=200)
+        fig.suptitle('Vaccines')
+        ax.grid(True)
+        fig.autofmt_xdate()
+        if jj_total_vaccinations[-1] >= 1_000_000:
+            ax.get_yaxis().set_major_formatter(
+                    tkr.FuncFormatter(lambda y, p: f"{y / 1_000_000}M"))
+        else:
+            ax.get_yaxis().set_major_formatter(
+              tkr.FuncFormatter(lambda y, p: f"{int(y):,d}")) 
+        ax.plot(x1, y1, label='Pfizer / BioNTech')
+        ax.plot(x2, y2, label='Moderna')
+        ax.plot(x3, y3, label='Johnson & Johnson')
+        ax.legend()
+        plt.savefig('vaccinations/vaccines.png', bbox_inches='tight')
+
+    if any([ncd, scd, nvc, svc, man]) is True:
         push_git() 
         timeout(3600)
