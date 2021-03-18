@@ -91,7 +91,7 @@ def plot(arrays, suffix, fp):
     if total_cases[-1] >= 1_000_000:
         y = total_cases / 1_000_000
         ax[0,0].get_yaxis().set_major_formatter(
-                tkr.FuncFormatter(lambda y, p: f"{int(y)}M"))
+                tkr.FuncFormatter(lambda y, p: f"{y}M"))
     else:
         y = total_cases
         label = 'Cases'
@@ -232,7 +232,7 @@ def plot_vacs(arrays, suffix, fn):
     fig.autofmt_xdate()
     if second_dose[-1] >= 1_000_000:
         ax.get_yaxis().set_major_formatter(
-                tkr.FuncFormatter(lambda y, p: f"{int(y / 1_000_000)}M"))
+                tkr.FuncFormatter(lambda y, p: f"{y / 1_000_000}M"))
     else:
         ax.get_yaxis().set_major_formatter(
           tkr.FuncFormatter(lambda y, p: f"{int(y):,d}")) 
