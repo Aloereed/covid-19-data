@@ -91,7 +91,7 @@ def plot(arrays, suffix, fp):
     if total_cases[-1] >= 1_000_000:
         y = total_cases / 1_000_000
         ax[0,0].get_yaxis().set_major_formatter(
-                tkr.FuncFormatter(lambda y, p: f"{y}M"))
+                tkr.FuncFormatter(lambda y, p: f"{int(y)}M"))
     else:
         y = total_cases
         label = 'Cases'
@@ -221,6 +221,28 @@ def nan_to_mean(array):
                 pos.append(a[i+1])
                 pos.append(a[i+2])
 
+def plot_vacs(arrays, suffix, fn):
+    x = dates
+    y1 = total_doses 
+    y2 = first_dose 
+    y3 = second_dose
+    fig, ax = plt.subplots(figsize=(12, 7), dpi=200)
+    fig.suptitle(f"{suffix} COVID-19 Vaccinations")
+    ax.grid(True)
+    fig.autofmt_xdate()
+    if second_dose[-1] >= 1_000_000:
+        ax.get_yaxis().set_major_formatter(
+                tkr.FuncFormatter(lambda y, p: f"{int(y / 1_000_000)}M"))
+    else:
+        ax.get_yaxis().set_major_formatter(
+          tkr.FuncFormatter(lambda y, p: f"{int(y):,d}")) 
+    ax.plot(x, y1, label='Total Doses')
+    ax.plot(x, y2, label='First Dose')
+    ax.plot(x, y3, label='Second Dose')
+    ax.legend()
+    plt.savefig(fn, bbox_inches='tight')
+    plt.close()
+
 st = time()
 
 while True:
@@ -300,7 +322,7 @@ while True:
         first_dose = first_dose.astype(np.int64)
         second_dose = second_dose.astype(np.int64)  
         total_doses = np.array(first_dose + second_dose, dtype='int64')
-        usd = {
+        usv = {
                 'date': dates,
                 'total doses': total_doses,
                 'first dose': first_dose,
@@ -308,24 +330,9 @@ while True:
                 }
         mk_dir('vaccinations')
         print(f"writing to '{os.path.join(os.getcwd(), 'vaccinations/us.csv')}'")
-        write_csv(usd, 'vaccinations/us.csv')
-        x = dates
-        y1 = total_doses 
-        y2 = first_dose 
-        y3 = second_dose
-        fig, ax = plt.subplots(figsize=(12, 7), dpi=200)
-        fig.suptitle('U.S COVID-19 Vaccinations')
-        ax.get_yaxis().set_major_formatter(
-                tkr.FuncFormatter(lambda y, p: f"{y / 1_000_000}M"))
-        fig.autofmt_xdate()
-        ax.grid(True)
-        ax.plot(x, y1, label='Total Doses')
-        ax.plot(x, y2, label='First Dose')
-        ax.plot(x, y3, label='Second Dose')
-        ax.legend()
+        write_csv(usv, 'vaccinations/us.csv')
         print(f"writing to '{os.path.join(os.getcwd(), 'vaccinations/us.png')}'")
-        plt.savefig('vaccinations/us.png', bbox_inches='tight')
-        plt.close()
+        plot_vacs(usv.values(), 'U.S', 'vaccinations/us.png')
 
     if svc is not False:
         d = pd.read_csv(io.StringIO(svc.decode('utf-8'))) 
@@ -353,31 +360,15 @@ while True:
             first_dose = first_dose.astype(np.int64)
             second_dose = second_dose.astype(np.int64)
             total_doses = np.array(first_dose + second_dose, dtype='int64')
-            std = {
+            stv = {
                     'date': dates,
                     'state': states,
                     'total doses': total_doses,
                     'first dose': first_dose, 
                     'second dose': second_dose,
                     }            
-            write_csv(std, f"vaccinations/states/{state}.csv")
-            x = dates
-            y1 = total_doses 
-            y2 = first_dose 
-            y3 = second_dose
-            fig, ax = plt.subplots(figsize=(12, 7), dpi=200)
-            fig.suptitle(f"{state} COVID-19 Vaccinations")
-            ax.grid(True)
-            ax.get_yaxis().set_major_formatter(
-              tkr.FuncFormatter(lambda y, p: f"{int(y):,d}")) 
-            ax.plot(x, y1, label='Total Doses')
-            ax.plot(x, y2, label='First Dose')
-            ax.plot(x, y3, label='Second Dose')
-            fig.autofmt_xdate()
-            ax.legend()
-            plt.savefig(f"vaccinations/states/{state}.png", bbox_inches='tight')
-            plt.close()
-
+            write_csv(stv, f"vaccinations/states/{state}.csv")
+            plot_vacs(stv.values(), state, f"vaccinations/states/{state}.png") 
     if any([ncd, scd, nvc, svc]) is True:
         push_git() 
         timeout(3600)
