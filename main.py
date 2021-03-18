@@ -307,6 +307,7 @@ while True:
                 'second dose': second_dose
                 }
         mk_dir('vaccinations')
+        print(f"writing to '{os.path.join(os.getcwd(), 'vaccinations/us.csv')}'")
         write_csv(usd, 'vaccinations/us.csv')
         x = dates
         y1 = total_doses 
@@ -322,6 +323,7 @@ while True:
         ax.plot(x, y2, label='First Dose')
         ax.plot(x, y3, label='Second Dose')
         ax.legend()
+        print(f"writing to '{os.path.join(os.getcwd(), 'vaccinations/us.png')}'")
         plt.savefig('vaccinations/us.png', bbox_inches='tight')
         plt.close()
 
