@@ -307,7 +307,7 @@ while True:
                 'second dose': second_dose
                 }
         mk_dir('vaccinations')
-        write_csv(usd, 'vaccinations/us_vaccinations.csv')
+        write_csv(usd, 'vaccinations/us.csv')
         x = dates
         y1 = total_doses 
         y2 = first_dose 
@@ -322,7 +322,7 @@ while True:
         ax.plot(x, y2, label='First Dose')
         ax.plot(x, y3, label='Second Dose')
         ax.legend()
-        plt.savefig('vaccinations/us_vaccinations.png', bbox_inches='tight')
+        plt.savefig('vaccinations/us.png', bbox_inches='tight')
         plt.close()
 
     if svc is not False:
@@ -373,7 +373,7 @@ while True:
             ax.plot(x, y3, label='Second Dose')
             fig.autofmt_xdate()
             ax.legend()
-            plt.savefig(f"vaccinations/states/{state}_vaccinations.png", bbox_inches='tight')
+            plt.savefig(f"vaccinations/states/{state}.png", bbox_inches='tight')
             plt.close()
 
     if any([ncd, scd, nvc, svc]) is True:
