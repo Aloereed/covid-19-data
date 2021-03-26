@@ -1,10 +1,10 @@
-###### Updated March 25, 2021, 3:46 P.M EST
+###### Updated March 26, 2021, 2:49 A.M EST
 # US COVID-19 Data 
 ###### [ [U.S. Data](us.csv) ([Raw CSV](https://raw.githubusercontent.com/drebrb/covid-19-data/master/us.csv)) | [U.S. State-Level Data](states) ]
-| U.S    | Total Reported   | On March 24   | 7-Day Average   |
+| U.S    | Total Reported   | On March 25   | 7-Day Average   |
 |:-------|:-----------------|:--------------|:----------------|
-| Cases  | 30,034,283       | 79,513        | 57,332          |
-| Deaths | 545,070          | 1,591         | 1,060           |
+| Cases  | 30,103,869       | 69,586        | 58,578          |
+| Deaths | 546,340          | 1,270         | 1,019           |
 ###### [ [U.S. Plot](us.png) ]
 ![Plot](https://github.com/drebrb/covid-19-data/blob/master/us.png)
 # US COVID-19 Vaccinations
