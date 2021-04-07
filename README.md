@@ -1,9 +1,9 @@
-###### Updated April 07, 2021, 2:55 A.M EST
+###### Updated April 07, 2021, 3:58 P.M EST
 # US COVID-19 Data 
 ###### [ [U.S. Data](us.csv) ([Raw CSV](https://raw.githubusercontent.com/drebrb/covid-19-data/master/us.csv)) | [U.S. State-Level Data](states) ]
 | U.S    | Total Reported   | On April 06   | 7-Day Average   |
 |:-------|:-----------------|:--------------|:----------------|
-| Cases  | 30,870,901       | 62,004        | 64,847          |
+| Cases  | 30,870,922       | 62,025        | 64,850          |
 | Deaths | 556,016          | 907           | 788             |
 ###### [ [U.S. Plot](us.png) ]
 ![Plot](https://github.com/drebrb/covid-19-data/blob/master/us.png)
