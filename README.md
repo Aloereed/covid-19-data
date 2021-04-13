@@ -1,10 +1,10 @@
-###### Updated April 12, 2021, 3:26 P.M EST
+###### Updated April 13, 2021, 2:29 A.M EST
 # US COVID-19 Data 
 ###### [ [U.S. Data](us.csv) ([Raw CSV](https://raw.githubusercontent.com/drebrb/covid-19-data/master/us.csv)) | [U.S. State-Level Data](states) ]
-| U.S    | Total Reported   | On April 11   | 7-Day Average   |
+| U.S    | Total Reported   | On April 12   | 7-Day Average   |
 |:-------|:-----------------|:--------------|:----------------|
-| Cases  | 31,219,820       | 48,271        | 69,649          |
-| Deaths | 561,531          | 300           | 993             |
+| Cases  | 31,292,106       | 72,286        | 69,029          |
+| Deaths | 562,007          | 476           | 985             |
 ###### [ [U.S. Plot](us.png) ]
 ![Plot](https://github.com/drebrb/covid-19-data/blob/master/us.png)
 # US COVID-19 Vaccinations
