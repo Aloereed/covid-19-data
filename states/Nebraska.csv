@@ -472,4 +472,5 @@ date,state,total cases,total deaths,new cases,new deaths
 2021-06-01,Nebraska,223404,2497,36,2
 2021-06-02,Nebraska,223434,2500,30,3
 2021-06-03,Nebraska,223517,2504,83,4
-2021-06-04,Nebraska,223558,2504,41,0
+2021-06-04,Nebraska,223558,2512,41,8
+2021-06-05,Nebraska,223558,2504,0,0
